@@ -1,4 +1,4 @@
-package com.example.depilationapp.presentation
+package com.example.depilationapp
 
 import android.app.Application
 import dagger.hilt.android.HiltAndroidApp

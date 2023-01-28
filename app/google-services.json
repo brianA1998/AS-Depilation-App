@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "46869199440",
+    "project_id": "depilationapp",
+    "storage_bucket": "depilationapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:46869199440:android:b5f66dbf49ad24c2b8af55",
+        "android_client_info": {
+          "package_name": "com.example.depilationapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "46869199440-qs23kjq1erlga7f2cgi9n2tfassodu1o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCqfleN4NYmAR-5-wnXo9Qei_qi29DvahI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "46869199440-qs23kjq1erlga7f2cgi9n2tfassodu1o.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
