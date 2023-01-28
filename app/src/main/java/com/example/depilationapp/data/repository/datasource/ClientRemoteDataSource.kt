@@ -2,7 +2,8 @@ package com.example.depilationapp.data.repository.datasource
 
 import com.example.depilationapp.data.model.Client
 import kotlinx.coroutines.flow.Flow
+import retrofit2.Response
 
-interface ClientLocalDataSource {
-    fun getClientItems(): Flow<List<Client>>
+interface ClientRemoteDataSource {
+    suspend fun getAllClients(): Response<Client>
 }
