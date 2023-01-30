@@ -1,9 +1,9 @@
 package com.example.depilationapp.data.util
 
-sealed class Response<T> {
+sealed class Response<out T> {
     object Loading : Response<Nothing>()
 
-    data class Success<T>(
+    data class Success<out T>(
         val data: T
     ) : Response<T>()
 

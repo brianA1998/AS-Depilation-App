@@ -11,5 +11,5 @@ typealias ClientsResponse = Response<Clients>
 
 
 interface ClientsRepository {
-    fun getClientsFromFirestore(): Flow<ClientsResponse>
+    fun getClientsFromFirestore(): Flow<Response<out MutableList<Client>>>
 }

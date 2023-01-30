@@ -1,7 +1,7 @@
 package com.example.depilationapp.data.repository
 
 import com.example.depilationapp.data.model.Client
-import com.example.depilationapp.data.util.Response
+import com.example.depilationapp.data.util.Response.*
 import com.example.depilationapp.domain.repository.ClientsRepository
 import com.example.depilationapp.domain.repository.ClientsResponse
 import com.google.firebase.firestore.CollectionReference
@@ -17,15 +17,15 @@ class ClientsRepositoryImpl @Inject constructor(
 ) : ClientsRepository {
 
 
-    override fun getClientsFromFirestore(): Flow<ClientsResponse> = callbackFlow {
+    override fun getClientsFromFirestore() = callbackFlow {
         val snapshotListener = clientsRef.addSnapshotListener { snapshot, e ->
             val clientsResponse = if (snapshot != null) {
                 val clients = snapshot.toObjects(Client::class.java)
-                Response.Success(clients)
+                Success(clients)
             } else {
-                Response.Failure(e)
+                Failure(e)
             }
-            trySend(clientsResponse as ClientsResponse)
+            trySend(clientsResponse)
         }
         awaitClose {
             snapshotListener.remove()
