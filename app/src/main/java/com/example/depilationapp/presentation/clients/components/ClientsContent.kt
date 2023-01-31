@@ -11,12 +11,16 @@ import com.example.depilationapp.domain.repository.Clients
 
 @Composable
 fun ClientsContent(
-    padding : PaddingValues,
-    clients : Clients
-){
-    LazyColumn(modifier = Modifier.fillMaxSize().padding(padding)){
-        items(items = clients){ clients ->
-
+    padding: PaddingValues,
+    clients: Clients
+) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(padding)
+    ) {
+        items(items = clients) { client ->
+            ClientCard(client = client)
         }
     }
 }

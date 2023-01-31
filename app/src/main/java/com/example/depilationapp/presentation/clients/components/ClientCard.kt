@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import com.example.depilationapp.core.Constants
 import com.example.depilationapp.data.model.Client
 
 @Composable
@@ -33,7 +34,7 @@ fun ClientCard(client: Client) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column{
-                TextTitle(clientTitle = client.name ?: NO_VALUE)
+                TextTitle(clientTitle = client.name ?: Constants.NO_VALUE)
             }
         }
     }
