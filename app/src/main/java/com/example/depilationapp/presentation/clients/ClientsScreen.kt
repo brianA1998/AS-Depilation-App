@@ -3,7 +3,7 @@ package com.example.depilationapp.presentation.clients
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.depilationapp.presentation.clients.components.Books
+import com.example.depilationapp.presentation.clients.components.Clients
 
 @Composable
 fun ClientsScreen(
@@ -11,7 +11,9 @@ fun ClientsScreen(
 ) {
     Scaffold(
         content = { padding ->
-            Clients
+            Clients() {
+                
+            }
 
         }
     ) {
