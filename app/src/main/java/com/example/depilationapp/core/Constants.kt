@@ -7,5 +7,5 @@ object Constants {
 
     //Placeholders
     const val NO_VALUE = ""
-
+    const val NO_VALUE_NUMBER = 0
 }
