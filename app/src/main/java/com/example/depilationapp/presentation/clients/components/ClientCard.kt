@@ -18,7 +18,6 @@ import com.example.depilationapp.presentation.theme.graySurface
 
 @Composable
 fun ClientCard(client: Client) {
-
     Card(
         shape = RoundedCornerShape(corner = CornerSize(16.dp)),
         modifier = Modifier
