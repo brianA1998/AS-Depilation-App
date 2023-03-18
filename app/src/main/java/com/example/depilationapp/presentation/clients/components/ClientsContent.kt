@@ -1,9 +1,7 @@
 package com.example.depilationapp.presentation.clients.components
 
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Text
@@ -18,7 +16,10 @@ import com.example.depilationapp.presentation.navigation.Screen
 
 @Composable
 fun ClientsContent(clients: List<Client>, navController: NavHostController) {
-    LazyColumn {
+    LazyColumn(
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
         items(items = clients) { client ->
             ClientCard(client) {
                 navController.navigate(Screen.DetailScreen.createRoute(clientName = client.name))
@@ -29,6 +30,11 @@ fun ClientsContent(clients: List<Client>, navController: NavHostController) {
 
 @Composable
 fun ClientCard(client: Client, onClick: () -> Unit) {
+    
+
+
+
+
     Text(
         text = client.name,
         color = Color.Black,
