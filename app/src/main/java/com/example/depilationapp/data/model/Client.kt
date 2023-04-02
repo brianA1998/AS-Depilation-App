@@ -1,6 +1,10 @@
 package com.example.depilationapp.data.model
 
+import kotlinx.serialization.Serializable
+
+@Serializable
 data class Client(
+    val id: String = "a123",
     var name: String = "",
     var surname: String = "",
     var document: Int? = null,
@@ -12,6 +16,8 @@ data class Client(
     var listZoneRetoque: String? = null,
     var Zone: String? = null,
 )
+
+
 
 
 
