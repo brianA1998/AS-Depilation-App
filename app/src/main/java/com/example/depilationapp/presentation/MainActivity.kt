@@ -4,6 +4,9 @@ import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Shapes
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -13,17 +16,23 @@ import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.presentation.clients.components.ClientsScreen
 import com.example.depilationapp.presentation.clients.components.DetailScreen
 import com.example.depilationapp.presentation.navigation.Screen
-import com.example.depilationapp.presentation.theme.MyTheme
 import dagger.hilt.android.AndroidEntryPoint
+import darkThemeColors
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
+import androidx.compose.material.Typography
+import lightThemeColors
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MyTheme {
+            val isSystemInDarkTheme = isSystemInDarkTheme()
+            val colors = if (isSystemInDarkTheme) darkThemeColors() else lightThemeColors()
+            MaterialTheme(
+                colors = colors,
+            ){
                 val navController = rememberNavController()
 
                 NavHost(navController, startDestination = Screen.ClientsScreen.route) {

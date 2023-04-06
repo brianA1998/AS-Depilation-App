@@ -20,7 +20,7 @@ fun DetailScreen(client: Client) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = "Detalle del Cliente") },
+                title = { Text(text = "Detalle de : ${client.name}") },
                 backgroundColor = MaterialTheme.colors.primary
             )
         },
@@ -31,22 +31,9 @@ fun DetailScreen(client: Client) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Card(
-                    shape = RoundedCornerShape(12.dp),
-                    backgroundColor = MaterialTheme.colors.primary,
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(
-                        text = client.name,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 24.sp,
-                        color = Color.White,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.padding(16.dp))
+
+                Spacer(modifier = Modifier.padding(10.dp))
+                DetailItem(title = "Nombre", value = client.name)
                 DetailItem(title = "Apellido", value = client.surname)
                 DetailItem(title = "Documento", value = client.document?.toString() ?: "")
                 DetailItem(title = "Provincia", value = client.province ?: "")

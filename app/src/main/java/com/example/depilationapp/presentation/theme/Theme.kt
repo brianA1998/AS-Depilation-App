@@ -21,18 +21,3 @@ private val LightColorPalette = lightColors(
     secondary = teal200
 )
 
-@Composable
-fun MyTheme(darkTheme: Boolean = true, content: @Composable() () -> Unit) {
-    val colors = if (darkTheme) {
-        DarkColorPalette
-    } else {
-        LightColorPalette
-    }
-
-    MaterialTheme(
-        colors = colors,
-        typography = typography,
-        shapes = shapes,
-        content = content
-    )
-}

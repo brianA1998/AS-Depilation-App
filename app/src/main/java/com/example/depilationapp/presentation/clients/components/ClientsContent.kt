@@ -8,6 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
+import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -45,7 +46,7 @@ fun ClientCard(client: Client, onClick: () -> Unit) {
             .clickable { onClick() }
             .padding(vertical = 4.dp),
         shape = RoundedCornerShape(8.dp),
-        elevation = 4.dp
+        elevation = 4.dp,
     ) {
         Row(
             modifier = Modifier
@@ -57,11 +58,11 @@ fun ClientCard(client: Client, onClick: () -> Unit) {
             Column {
                 Text(
                     text = client.name,
-                    style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Bold),
                 )
                 Text(
                     text = "De : ${client.province}",
-                    style = MaterialTheme.typography.body2
+                    style = MaterialTheme.typography.body2,
                 )
 
             }
