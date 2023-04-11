@@ -44,7 +44,7 @@ fun DetailScreen(client: Client) {
                 DetailItem(title = "Teléfono adicional", value = client.numberPhoneOther.toString())
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
                 DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
-                DetailItem(title = "Zona", value = client.Zone ?: "")
+                DetailItem(title = "Zona", value = (client.zone ?: "") as String)
                 DetailItem(title = "Observaciones", value = client.observation)
             }
         }
