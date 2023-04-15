@@ -1,8 +1,8 @@
 package com.example.depilationapp.data.model
 
 enum class Zone(val zone: String) {
-    LEGS("PIERNA/S"),
-    ARM("BRAZO/S"),
+    LEGS("PIERNAS"),
+    ARMS("BRAZOS"),
     DUG("CAVADO"),
     DOWN("BOZO"),
     MUSTACHE("BIGOTE"),
@@ -11,5 +11,6 @@ enum class Zone(val zone: String) {
     ARMPITS("AXILAS"),
     CHEST("PECHO"),
 }
+
 
 

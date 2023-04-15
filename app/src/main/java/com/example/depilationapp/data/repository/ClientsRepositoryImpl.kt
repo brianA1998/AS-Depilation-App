@@ -1,12 +1,13 @@
 package com.example.depilationapp.data.repository
 
+import com.example.depilationapp.core.mapToClient
+import com.example.depilationapp.core.toMap
 import com.example.depilationapp.data.model.Client
-import com.example.depilationapp.data.util.Response.*
+import com.example.depilationapp.data.util.Response.Failure
+import com.example.depilationapp.data.util.Response.Success
 import com.example.depilationapp.domain.repository.ClientsRepository
-import com.example.depilationapp.domain.repository.ClientsResponse
 import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -18,17 +19,23 @@ class ClientsRepositoryImpl @Inject constructor(
 
 
     override fun getClientsFromFirestore() = callbackFlow {
-        val snapshotListener = clientsRef.addSnapshotListener { snapshot, e ->
-            val clientsResponse = if (snapshot != null) {
-                val clients = snapshot.toObjects(Client::class.java)
-                Success(clients)
-            } else {
-                Failure(e)
+        val subscription = clientsRef.addSnapshotListener { snapshot, exception ->
+            if (exception != null) {
+                trySend(Failure(exception))
+                return@addSnapshotListener
             }
-            trySend(clientsResponse)
+
+            val clients = snapshot?.documents?.map { document ->
+                mapToClient(document.data as Map<String, Any>)
+            }?.toMutableList() ?: mutableListOf()
+
+            trySend(Success(clients))
         }
-        awaitClose {
-            snapshotListener.remove()
-        }
+
+        awaitClose { subscription.remove() }
+    }
+
+    override suspend fun saveClient(client: Client) {
+        clientsRef.add(client.toMap())
     }
 }
