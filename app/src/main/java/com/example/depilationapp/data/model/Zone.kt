@@ -1,5 +1,8 @@
 package com.example.depilationapp.data.model
 
+import androidx.compose.ui.text.toUpperCase
+import java.util.*
+
 enum class Zone(val zone: String) {
     LEGS("PIERNAS"),
     ARMS("BRAZOS"),
@@ -14,7 +17,7 @@ enum class Zone(val zone: String) {
     companion object {
         fun safeValueOf(value: String): Zone? {
             return try {
-                valueOf(value.toUpperCase())
+                values().find{ it.zone.equals(value, ignoreCase = true) }
             } catch (e: IllegalArgumentException) {
                 null
             }

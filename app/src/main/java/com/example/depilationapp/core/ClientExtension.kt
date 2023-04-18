@@ -12,18 +12,22 @@ import kotlinx.serialization.encoding.Encoder
 import kotlinx.serialization.modules.SerializersModule
 
 fun mapToClient(data: Map<String, Any>): Client {
+
+    val zoneData = data["zone"] as String?
+    val zone = zoneData?.let { Zone.safeValueOf(it) }
+
     return Client(
         id = data["id"] as? String ?: "",
         name = data["name"] as String ?: "",
         surname = data["surname"] as String ?: "",
         document = (data["document"] as? Number)?.toInt() ?: 0,
         province = data["province"] as String? ?: "",
-        numberPhonePersonal = (data["numberPhonePersonal"] as? Number)?.toLong() ?: 0,
-        numberPhoneOther = (data["numberPhoneOther"] as? Number)?.toLong() ?: 0,
+        numberPhonePersonal = (data["number_phone"] as? Number)?.toLong() ?: 0,
+        numberPhoneOther = (data["number_phone_other"] as? Number)?.toLong() ?: 0,
         state = data["state"] as? Boolean ?: true,
         observation = data["observation"] as? String ?: "",
-        listZoneRetoque = data["listZoneRetoque"] as? String ?: "",
-        zone = (data["zone"] as String?)?.let { Zone.safeValueOf(it) },
+        listZoneRetoque = data["zone_retoque"] as? String ?: "",
+        zone = zone,
     )
 }
 
