@@ -8,5 +8,6 @@ sealed class Screen(val route: String) {
     object DetailScreen : Screen("detail/{client}") {
         fun createRoute(jsonClient: String) = "detail/${Uri.encode(jsonClient)}"
     }
+    object AddClientScreen : Screen("add_client")
 }
 
