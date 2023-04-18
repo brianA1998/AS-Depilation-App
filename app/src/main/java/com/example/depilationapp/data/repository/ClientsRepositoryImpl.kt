@@ -1,8 +1,8 @@
 package com.example.depilationapp.data.repository
 
 import com.example.depilationapp.core.mapToClient
-import com.example.depilationapp.core.toMap
 import com.example.depilationapp.data.model.Client
+import com.example.depilationapp.data.model.toMap
 import com.example.depilationapp.data.util.Response.Failure
 import com.example.depilationapp.data.util.Response.Success
 import com.example.depilationapp.domain.repository.ClientsRepository

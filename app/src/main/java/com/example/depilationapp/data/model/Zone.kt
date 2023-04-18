@@ -9,7 +9,17 @@ enum class Zone(val zone: String) {
     SIDEBURN("PATILLA"),
     BACK("ESPALDA"),
     ARMPITS("AXILAS"),
-    CHEST("PECHO"),
+    CHEST("PECHO");
+
+    companion object {
+        fun safeValueOf(value: String): Zone? {
+            return try {
+                valueOf(value.toUpperCase())
+            } catch (e: IllegalArgumentException) {
+                null
+            }
+        }
+    }
 }
 
 
