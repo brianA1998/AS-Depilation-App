@@ -53,8 +53,6 @@ fun AddClientScreen(navController: NavHostController) {
                 .padding(bottom = 8.dp)
         )
 
-        // Agrega más TextField aquí según sea necesario
-
         Button(
             onClick = {
                 // Lógica para guardar el cliente en Firestore y navegar a la pantalla de lista de clientes

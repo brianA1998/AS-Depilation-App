@@ -4,6 +4,7 @@ import com.example.depilationapp.core.Constants
 import com.example.depilationapp.data.repository.ClientsRepositoryImpl
 import com.example.depilationapp.domain.repository.ClientsRepository
 import com.example.depilationapp.domain.use_case.GetClients
+import com.example.depilationapp.domain.use_case.SaveClient
 import com.example.depilationapp.domain.use_case.UseCases
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.ktx.firestore
@@ -24,5 +25,6 @@ object AppModule {
         ClientsRepositoryImpl(clientsRef)
 
     @Provides
-    fun provideUseCases(repo: ClientsRepository) = UseCases(getClients = GetClients(repo))
+    fun provideUseCases(repo: ClientsRepository) =
+        UseCases(getClients = GetClients(repo), saveClient = SaveClient(repo))
 }
