@@ -4,6 +4,7 @@ import androidx.compose.ui.text.toUpperCase
 import java.util.*
 
 enum class Zone(val zone: String) {
+    NONE("NINGUNA"),
     LEGS("PIERNAS"),
     ARMS("BRAZOS"),
     DUG("CAVADO"),
