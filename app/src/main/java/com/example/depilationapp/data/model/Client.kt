@@ -9,13 +9,14 @@ data class Client(
     var name: String = "",
     var surname: String = "",
     var document: Int? = null,
-    var province: String? = null,
+    var province: Province? = null,
     var numberPhonePersonal: Long = 0,
     var numberPhoneOther: Long = 0,
     var state: Boolean = false,
     var observation: String = "",
     var listZoneRetoque: String? = null,
-    @Serializable(with = ZoneSerializer::class) var zone: Zone? = null
+    @Serializable(with = ZoneSerializer::class) var zone: Zone? = null,
+    @Serializable(with = ZoneDepilate.ZoneDepilateSerializer::class) var zoneDepilate: ZoneDepilate? = null
 )
 
 fun Client.toMap(): Map<String, Any> {
@@ -24,12 +25,13 @@ fun Client.toMap(): Map<String, Any> {
         "name" to name,
         "surname" to surname,
         "document" to (document ?: ""),
-        "province" to (province ?: ""),
+        "province" to (province?.province ?: ""),
         "numberPhonePersonal" to numberPhonePersonal,
         "numberPhoneOther" to numberPhoneOther,
         "state" to state,
         "observation" to observation,
         "listZoneRetoque" to (listZoneRetoque ?: ""),
-        "zone" to (zone?.zone ?: "")
+        "zone" to (zone?.zone ?: ""),
+        "zoneDepilate" to (ZoneDepilate ?: ZoneDepilate())
     )
 }
