@@ -1,6 +1,6 @@
 package com.example.depilationapp.data.model
 
-import com.example.depilationapp.core.ZoneSerializer
+
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -15,11 +15,16 @@ data class Client(
     var state: Boolean = false,
     var observation: String = "",
     var listZoneRetoque: String? = null,
-    @Serializable(with = ZoneSerializer::class) var zone: Zone? = null,
     @Serializable(with = ZoneDepilate.ZoneDepilateSerializer::class) var zoneDepilate: ZoneDepilate? = null
 )
 
 fun Client.toMap(): Map<String, Any> {
+    val zoneDepilateMap = mutableMapOf<String, Any>()
+    this.zoneDepilate?.let {
+        zoneDepilateMap["listZone"] = it.listZone?.map { zone -> zone.zone } ?: listOf<String>()
+        zoneDepilateMap["intense"] = it.intense
+    }
+
     return mapOf(
         "id" to id,
         "name" to name,
@@ -31,7 +36,5 @@ fun Client.toMap(): Map<String, Any> {
         "state" to state,
         "observation" to observation,
         "listZoneRetoque" to (listZoneRetoque ?: ""),
-        "zone" to (zone?.zone ?: ""),
-        "zoneDepilate" to (ZoneDepilate ?: ZoneDepilate())
-    )
+    ) + zoneDepilateMap
 }

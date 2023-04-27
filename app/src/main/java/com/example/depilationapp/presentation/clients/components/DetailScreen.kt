@@ -1,10 +1,12 @@
 package com.example.depilationapp.presentation.clients.components
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -17,6 +19,11 @@ import com.example.depilationapp.data.model.Client
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DetailScreen(client: Client) {
+    LaunchedEffect(client) {
+        Log.d("DetailScreen", "Client: $client")
+        Log.d("DetailScreen", "Zone Depilate: ${client.zoneDepilate}")
+        Log.d("DetailScreen", "List Zone: ${client.zoneDepilate?.listZone}")
+    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -36,7 +43,7 @@ fun DetailScreen(client: Client) {
                 DetailItem(title = "Nombre", value = client.name)
                 DetailItem(title = "Apellido", value = client.surname)
                 DetailItem(title = "Documento", value = client.document?.toString() ?: "")
-                DetailItem(title = "Provincia", value = client.province ?: "")
+                DetailItem(title = "Provincia", value = client.province?.province ?: "")
                 DetailItem(
                     title = "Teléfono personal",
                     value = client.numberPhonePersonal.toString()
@@ -44,7 +51,10 @@ fun DetailScreen(client: Client) {
                 DetailItem(title = "Teléfono adicional", value = client.numberPhoneOther.toString())
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
                 DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
-                DetailItem(title = "Zona", value = client.zone?.zone ?: "")
+                DetailItem(
+                    title = "Zona",
+                    value = client.zoneDepilate?.listZone?.joinToString(", ") ?: ""
+                )
                 DetailItem(title = "Observaciones", value = client.observation)
             }
         }

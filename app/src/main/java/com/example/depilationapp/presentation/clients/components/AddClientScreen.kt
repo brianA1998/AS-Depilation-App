@@ -15,7 +15,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.Client
+import com.example.depilationapp.data.model.Province
 import com.example.depilationapp.data.model.Zone
+import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.domain.use_case.UseCases
 import kotlinx.coroutines.launch
 
@@ -25,6 +27,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     val (name, setName) = remember { mutableStateOf("") }
     val (surname, setSurname) = remember { mutableStateOf("") }
     val (document, setDocument) = remember { mutableStateOf("") }
+    val (intensity, setIntensity) = remember { mutableStateOf("") }
     val (province, setProvince) = remember { mutableStateOf("") }
     val (numberPhonePersonal, setNumberPhonePersonal) = remember { mutableStateOf("") }
     val (numberPhoneOther, setNumberPhoneOther) = remember { mutableStateOf("") }
@@ -123,6 +126,14 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                     .padding(bottom = 8.dp)
             )
 
+            OutlinedTextField(
+                value = intensity,
+                onValueChange = setIntensity,
+                label = { Text("Intensidad de depilación") },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 8.dp)
+            )
 
             ZoneDropdown(zone, setZone)
 
@@ -135,13 +146,16 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                             name = name,
                             surname = surname,
                             document = document.toIntOrNull(),
-                            province = province,
+                            province = Province.safeValueOf(province) ?: Province.NONE,
                             numberPhonePersonal = numberPhonePersonal.toLongOrNull() ?: 0,
                             numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
                             state = false,
                             observation = observation,
                             listZoneRetoque = null,
-                            zone = zone
+                            zoneDepilate = ZoneDepilate(
+                                listZone = if (zone != Zone.NONE) listOf(zone) else null,
+                                intense = intensity.toIntOrNull() ?: 0
+                            )
                         )
                         useCases.saveClient(client)
                         navController.navigate("clients")
