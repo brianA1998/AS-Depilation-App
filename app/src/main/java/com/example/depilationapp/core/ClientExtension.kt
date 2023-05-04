@@ -16,14 +16,21 @@ import kotlinx.serialization.modules.SerializersModule
 
 fun mapToClient(data: Map<String, Any>): Client {
 
-    val listZone = (data["listZone"] as? List<String>)?.map { zoneName ->
+    val zoneData = data["zone"] as? List<Map<String, Any>> ?: listOf()
+
+    val listZone = zoneData.map { zoneMap ->
+        val zoneName = zoneMap["name"] as? String ?: ""
         Zone.safeValueOf(zoneName) ?: Zone.NONE
+    }
+    val listIntensity = zoneData.map { zoneMap ->
+        zoneMap["intensity"] as? Int ?: 0
     }
 
     val zoneDepilate = ZoneDepilate(
         listZone = listZone,
-        intense = data["intense"] as? Int ?: 0
+        intense = listIntensity.firstOrNull() ?: 0
     )
+
 
     return Client(
         id = data["id"] as? String ?: "",

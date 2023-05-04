@@ -19,11 +19,6 @@ import com.example.depilationapp.data.model.Client
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun DetailScreen(client: Client) {
-    LaunchedEffect(client) {
-        Log.d("DetailScreen", "Client: $client")
-        Log.d("DetailScreen", "Zone Depilate: ${client.zoneDepilate}")
-        Log.d("DetailScreen", "List Zone: ${client.zoneDepilate?.listZone}")
-    }
     Scaffold(
         topBar = {
             TopAppBar(
@@ -51,10 +46,24 @@ fun DetailScreen(client: Client) {
                 DetailItem(title = "Teléfono adicional", value = client.numberPhoneOther.toString())
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
                 DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
-                DetailItem(
-                    title = "Zona",
-                    value = client.zoneDepilate?.listZone?.joinToString(", ") ?: ""
-                )
+                client.zoneDepilate?.let { zoneDepilate ->
+                    zoneDepilate.listZone?.let { listZone ->
+                        if (listZone.isNotEmpty()) {
+                            Text(
+                                text = "Zonas",
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
+                                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                            )
+                            listZone.forEach { zone ->
+                                DetailItem(
+                                    title = zone.name,
+                                    value = "Intensidad: ${zoneDepilate.intense}"
+                                )
+                            }
+                        }
+                    }
+                }
                 DetailItem(title = "Observaciones", value = client.observation)
             }
         }
