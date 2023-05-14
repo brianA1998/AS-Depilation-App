@@ -99,20 +99,30 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
 
             OutlinedTextField(
                 value = numberPhonePersonal,
-                onValueChange = setNumberPhonePersonal,
+                onValueChange = { newInput ->
+                    if (newInput.all { it.isDigit() }) {
+                        setNumberPhonePersonal(newInput)
+                    }
+                },
                 label = { Text("Teléfono personal") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
             OutlinedTextField(
                 value = numberPhoneOther,
-                onValueChange = setNumberPhoneOther,
+                onValueChange = { newInput ->
+                    if (newInput.all { it.isDigit() }) {
+                        setNumberPhoneOther(newInput)
+                    }
+                },
                 label = { Text("Teléfono alternativo") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
 
@@ -127,16 +137,19 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
 
             OutlinedTextField(
                 value = intensity,
-                onValueChange = setIntensity,
+                onValueChange = { newInput ->
+                    if (newInput.all { it.isDigit() }) {
+                        setIntensity(newInput)
+                    }
+                },
                 label = { Text("Intensidad de depilación") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 8.dp),
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
             )
 
             ZoneDropdown(zone, setZone)
-
-
 
             Button(
                 onClick = {
@@ -168,8 +181,6 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
             }
         }
     }
-
-
 }
 
 @Composable
