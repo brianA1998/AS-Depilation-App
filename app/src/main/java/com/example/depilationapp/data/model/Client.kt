@@ -15,15 +15,13 @@ data class Client(
     var state: Boolean = false,
     var observation: String = "",
     var listZoneRetoque: String? = null,
-    @Serializable(with = ZoneDepilate.ZoneDepilateSerializer::class) var zoneDepilate: ZoneDepilate? = null
+    var zoneDepilate: ZoneDepilate? = null,
 )
 
 fun Client.toMap(): Map<String, Any> {
-    val zoneDepilateMap = mutableMapOf<String, Any>()
-    this.zoneDepilate?.let {
-        zoneDepilateMap["listZone"] = it.listZone?.map { zone -> zone.zone } ?: listOf<String>()
-        zoneDepilateMap["intense"] = it.intense
-    }
+    val zoneDepilateList = this.zoneDepilate?.listZone?.map { zone ->
+        mapOf("name" to zone.name, "intensity" to zone.intensity)
+    } ?: listOf<Map<String, Any>>()
 
     return mapOf(
         "id" to id,
@@ -36,5 +34,6 @@ fun Client.toMap(): Map<String, Any> {
         "state" to state,
         "observation" to observation,
         "listZoneRetoque" to (listZoneRetoque ?: ""),
-    ) + zoneDepilateMap
+        "zone" to zoneDepilateList
+    )
 }

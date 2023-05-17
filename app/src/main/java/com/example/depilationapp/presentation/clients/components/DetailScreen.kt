@@ -44,7 +44,10 @@ fun DetailScreen(client: Client) {
                     title = "Teléfono personal",
                     value = client.numberPhonePersonal?.toString() ?: ""
                 )
-                DetailItem(title = "Teléfono adicional", value = client.numberPhoneOther?.toString()  ?: "")
+                DetailItem(
+                    title = "Teléfono adicional",
+                    value = client.numberPhoneOther?.toString() ?: ""
+                )
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
                 DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
                 client.zoneDepilate?.let { zoneDepilate ->
@@ -59,7 +62,7 @@ fun DetailScreen(client: Client) {
                             listZone.forEach { zone ->
                                 DetailItem(
                                     title = zone.name,
-                                    value = "Intensidad: ${zoneDepilate.intense}"
+                                    value = zone.intensity.toString()
                                 )
                             }
                         }

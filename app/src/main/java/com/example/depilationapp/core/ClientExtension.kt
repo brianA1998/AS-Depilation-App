@@ -16,20 +16,16 @@ import kotlinx.serialization.modules.SerializersModule
 
 fun mapToClient(data: Map<String, Any>): Client {
 
-    val zoneData = data["zone"] as? List<Map<String, Any>> ?: listOf()
+    val zoneData = (data["zone"] as? List<Map<String, Any>>) ?: listOf()
 
     val listZone = zoneData.map { zoneMap ->
         val zoneName = zoneMap["name"] as? String ?: ""
-        Zone.safeValueOf(zoneName) ?: Zone.NONE
-    }
-    val listIntensity = zoneData.map { zoneMap ->
-        zoneMap["intensity"] as? Int ?: 0
+        val zoneIntensity = zoneMap["intensity"] as? Int ?: 0
+        Zone(zoneName, zoneIntensity)
     }
 
-    val zoneDepilate = ZoneDepilate(
-        listZone = listZone,
-        intense = listIntensity.firstOrNull() ?: 0
-    )
+
+    val zoneDepilate = ZoneDepilate(listZone)
 
     Log.d("zoneDepilate", "zoneDepilate: $zoneDepilate")
 
@@ -46,9 +42,4 @@ fun mapToClient(data: Map<String, Any>): Client {
         listZoneRetoque = data["zone_retoque"] as? String ?: "",
         zoneDepilate = zoneDepilate
     )
-}
-
-
-val serializersModule = SerializersModule {
-    contextual(Zone::class, Zone.ZoneSerializer)
 }

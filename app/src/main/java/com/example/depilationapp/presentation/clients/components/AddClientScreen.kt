@@ -13,10 +13,8 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.Province
@@ -31,12 +29,12 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     val (name, setName) = remember { mutableStateOf("") }
     val (surname, setSurname) = remember { mutableStateOf("") }
     val (document, setDocument) = remember { mutableStateOf("") }
-    val (intensity, setIntensity) = remember { mutableStateOf("") }
+    val (intensity, setIntensity) = remember { mutableStateOf(0) }
     val (province, setProvince) = remember { mutableStateOf("") }
     val (numberPhonePersonal, setNumberPhonePersonal) = remember { mutableStateOf("") }
     val (numberPhoneOther, setNumberPhoneOther) = remember { mutableStateOf("") }
     val (observation, setObservation) = remember { mutableStateOf("") }
-    val (zone, setZone) = remember { mutableStateOf(Zone.NONE) }
+    val (zone, setZone) = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
 
     Scaffold(
@@ -145,10 +143,12 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
             )
 
             OutlinedTextField(
-                value = intensity,
+                value = intensity.toString(),
                 onValueChange = { newInput ->
-                    if (newInput.all { it.isDigit() }) {
-                        setIntensity(newInput)
+                    if (newInput.isNotEmpty() && newInput.all { it.isDigit() }) {
+                        setIntensity(newInput.toInt())
+                    } else if (newInput.isEmpty()) {
+                        setIntensity(0) // Puedes definir un valor por defecto para cuando el campo esté vacío
                     }
                 },
                 label = { Text("Intensidad de depilación") },
@@ -158,6 +158,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 shape = RoundedCornerShape(8.dp)
             )
+
 
             ZoneDropdown(zone, setZone)
 
@@ -175,8 +176,12 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                             observation = observation,
                             listZoneRetoque = null,
                             zoneDepilate = ZoneDepilate(
-                                listZone = if (zone != Zone.NONE) listOf(zone) else null,
-                                intense = intensity.toIntOrNull() ?: 0
+                                listZone = if (zone.isNotEmpty()) listOf(
+                                    Zone(
+                                        zone,
+                                        intensity
+                                    )
+                                ) else null
                             )
                         )
                         Log.d("Number_Client", "Number personal: ${client.numberPhonePersonal}")
@@ -195,13 +200,15 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     }
 }
 
+val zones = listOf("BRAZO", "ESPALDA", "PIERNAS")
+
 @Composable
-fun ZoneDropdown(zone: Zone, setZone: (Zone) -> Unit) {
+fun ZoneDropdown(zone: String, setZone: (String) -> Unit) {
     val expanded = remember { mutableStateOf(false) }
 
     Box {
         OutlinedTextField(
-            value = zone.zone,
+            value = zone,
             onValueChange = { },
             label = { Text("Zona") },
             readOnly = true,
@@ -222,12 +229,12 @@ fun ZoneDropdown(zone: Zone, setZone: (Zone) -> Unit) {
             onDismissRequest = { expanded.value = false },
             modifier = Modifier.fillMaxWidth()
         ) {
-            Zone.values().forEach { zoneItem ->
+            zones.forEach { zoneItem ->
                 DropdownMenuItem(onClick = {
                     setZone(zoneItem)
                     expanded.value = false
                 }) {
-                    Text(text = zoneItem.zone)
+                    Text(text = zoneItem)
                 }
             }
         }
