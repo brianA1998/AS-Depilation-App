@@ -31,6 +31,7 @@ fun mapToClient(data: Map<String, Any>): Client {
         intense = listIntensity.firstOrNull() ?: 0
     )
 
+    Log.d("zoneDepilate", "zoneDepilate: $zoneDepilate")
 
     return Client(
         id = data["id"] as? String ?: "",

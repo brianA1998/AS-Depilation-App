@@ -33,6 +33,7 @@ fun DetailScreen(client: Client) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                Log.d("DetailScreen", "Client: $client")
 
                 Spacer(modifier = Modifier.padding(10.dp))
                 DetailItem(title = "Nombre", value = client.name)
@@ -41,9 +42,9 @@ fun DetailScreen(client: Client) {
                 DetailItem(title = "Provincia", value = client.province?.province ?: "")
                 DetailItem(
                     title = "Teléfono personal",
-                    value = client.numberPhonePersonal.toString()
+                    value = client.numberPhonePersonal?.toString() ?: ""
                 )
-                DetailItem(title = "Teléfono adicional", value = client.numberPhoneOther.toString())
+                DetailItem(title = "Teléfono adicional", value = client.numberPhoneOther?.toString()  ?: "")
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
                 DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
                 client.zoneDepilate?.let { zoneDepilate ->

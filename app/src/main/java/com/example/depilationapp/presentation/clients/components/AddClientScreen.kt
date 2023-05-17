@@ -1,8 +1,10 @@
 package com.example.depilationapp.presentation.clients.components
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
@@ -61,7 +63,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 label = { Text("Nombre") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 8.dp),
+                shape = RoundedCornerShape(8.dp),
             )
 
             OutlinedTextField(
@@ -70,7 +73,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 label = { Text("Apellido") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 8.dp),
+                shape = RoundedCornerShape(8.dp)
             )
 
             OutlinedTextField(
@@ -84,7 +88,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                shape = RoundedCornerShape(8.dp)
             )
 
             OutlinedTextField(
@@ -93,7 +98,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 label = { Text("Provincia") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 8.dp),
+                shape = RoundedCornerShape(8.dp)
             )
 
 
@@ -108,7 +114,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                shape = RoundedCornerShape(8.dp)
             )
 
             OutlinedTextField(
@@ -122,7 +129,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                shape = RoundedCornerShape(8.dp)
             )
 
 
@@ -132,7 +140,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 label = { Text("Observaciones") },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 8.dp)
+                    .padding(bottom = 8.dp),
+                shape = RoundedCornerShape(8.dp)
             )
 
             OutlinedTextField(
@@ -146,7 +155,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                shape = RoundedCornerShape(8.dp)
             )
 
             ZoneDropdown(zone, setZone)
@@ -169,6 +179,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                                 intense = intensity.toIntOrNull() ?: 0
                             )
                         )
+                        Log.d("Number_Client", "Number personal: ${client.numberPhonePersonal}")
+                        Log.d("Number_Client", "Number other: ${client.numberPhoneOther}")
                         useCases.saveClient(client)
                         navController.navigate("clients")
                     }

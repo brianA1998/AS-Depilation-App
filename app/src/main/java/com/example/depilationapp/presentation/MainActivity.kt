@@ -2,6 +2,7 @@ package com.example.depilationapp.presentation
 
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -59,6 +60,8 @@ fun MyApp(useCases: UseCases) {
                 type = NavType.StringType
             })) { backStackEntry ->
                 val jsonClient = Uri.decode(backStackEntry.arguments?.getString("client"))
+                val json = Json { isLenient = true }
+                Log.d("MainActivity-Check", "jsonClient: $jsonClient")
                 val client = Json.decodeFromString<Client>(jsonClient)
                 DetailScreen(client = client)
             }
