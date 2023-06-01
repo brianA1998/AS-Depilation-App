@@ -4,6 +4,7 @@ object Constants {
 
     //Firestore
     const val CLIENTS = "clients"
+    const val ZONES = "zones"
 
     //Placeholders
     const val NO_VALUE = ""
