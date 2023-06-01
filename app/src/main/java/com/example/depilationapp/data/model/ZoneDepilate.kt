@@ -14,6 +14,7 @@ import kotlinx.serialization.encoding.CompositeDecoder
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+@Serializable
 data class ZoneDepilate(
     val id: String = "",
     val clientId: String = "",

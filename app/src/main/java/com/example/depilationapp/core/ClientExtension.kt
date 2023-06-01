@@ -1,6 +1,5 @@
 package com.example.depilationapp.core
 
-import android.util.Log
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.Province
 import com.example.depilationapp.data.model.Zone
@@ -9,6 +8,7 @@ import com.example.depilationapp.data.model.ZoneDepilate
 fun mapToClient(data: Map<String, Any>): Client {
 
     val zoneData = (data["zone"] as? List<Map<String, Any>>) ?: listOf()
+    val zoneDepilateData = (data["zone_depilate"] as? List<Map<String, Any>>) ?: listOf()
 
     val listZone = zoneData.map { zoneMap ->
         val zoneName = zoneMap["zone"] as? String ?: ""
@@ -16,11 +16,19 @@ fun mapToClient(data: Map<String, Any>): Client {
         Zone(zoneName, zoneIntensity)
     }
 
+    val zoneDepilate = zoneDepilateData.map { zoneDepilateMap ->
+        ZoneDepilate(
+            id = zoneDepilateMap["id"] as? String ?: "",
+            clientId = zoneDepilateMap["clientId"] as? String ?: "",
+            zone = zoneDepilateMap["zone"] as? String ?: "",
+            intense = zoneDepilateMap["intense"] as? Int ?: 0,
+            date = zoneDepilateMap["date"] as? Long ?: 0
+        )
+    }
 
-    val listZoneRetoque = (data["zone_retoque"] as? List<String>) ?: listOf()
 
+    val listZoneRetoque = (data["zone_retoque"] as? List<String>)?.joinToString() ?: ""
 
-    Log.d("zoneDepilate", "zoneDepilate: $zoneDepilate")
 
     return Client(
         id = data["id"] as? String ?: "",

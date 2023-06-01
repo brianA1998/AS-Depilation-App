@@ -1,6 +1,7 @@
 package com.example.depilationapp.data.model
 
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -14,13 +15,15 @@ data class Client(
     var numberPhoneOther: Long = 0,
     var state: Boolean = false,
     var observation: String = "",
-    var listZoneRetoque: String? = null,
-    var zoneDepilate: ZoneDepilate? = null,
+    val listZoneRetoque: String = "",
+    @Contextual val zoneDepilate: List<ZoneDepilate> = listOf(),
 )
 
 fun Client.toMap(): Map<String, Any> {
-    val zoneDepilateList = this.zoneDepilate?.listZone?.map { zone ->
-        mapOf("name" to zone.name, "intensity" to zone.intensity)
+    val zoneDepilateList = this.zoneDepilate?.map { zone ->
+        mapOf(
+            "name" to zone.zone, "intensity" to zone.intense
+        )
     } ?: listOf<Map<String, Any>>()
 
     return mapOf(
