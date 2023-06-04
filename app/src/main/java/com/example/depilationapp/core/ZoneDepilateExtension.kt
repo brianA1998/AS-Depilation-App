@@ -1,7 +1,6 @@
 package com.example.depilationapp.core
 
 import com.example.depilationapp.data.model.ZoneDepilate
-
 fun ZoneDepilate.toMap(): Map<String, Any> {
     return mapOf(
         "id" to this.id,

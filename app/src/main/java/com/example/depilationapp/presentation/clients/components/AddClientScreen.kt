@@ -174,15 +174,16 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                             numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
                             state = false,
                             observation = observation,
-                            listZoneRetoque = null,
-                            zoneDepilate = ZoneDepilate(
-                                listZone = if (zone.isNotEmpty()) listOf(
-                                    Zone(
-                                        zone,
-                                        intensity
-                                    )
-                                ) else null
-                            )
+                            listZoneRetoque = "",
+                            zoneDepilate = if (zone.isNotEmpty()) listOf(
+                                ZoneDepilate(
+                                    id = "tu id aquí", // Necesitarás generar una id para esta zona depilada
+                                    clientId = "el id del cliente aquí", // Necesitarás proporcionar el id del cliente
+                                    zone = zone,
+                                    intense = intensity,
+                                    date = System.currentTimeMillis() // o cualquier fecha que quieras proporcionar
+                                )
+                            ) else listOf()
                         )
                         Log.d("Number_Client", "Number personal: ${client.numberPhonePersonal}")
                         Log.d("Number_Client", "Number other: ${client.numberPhoneOther}")

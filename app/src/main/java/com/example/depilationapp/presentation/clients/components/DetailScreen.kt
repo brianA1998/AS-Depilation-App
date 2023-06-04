@@ -50,23 +50,22 @@ fun DetailScreen(client: Client) {
                 )
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
                 DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
-                client.zoneDepilate?.let { zoneDepilate ->
-                    zoneDepilate.listZone?.let { listZone ->
-                        if (listZone.isNotEmpty()) {
-                            Text(
-                                text = "Zonas",
-                                fontWeight = FontWeight.Bold,
-                                fontSize = 18.sp,
-                                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                client.zoneDepilate?.let { zoneDepilateList ->
+                    if (zoneDepilateList.isNotEmpty()) {
+                        Text(
+                            text = "Zonas",
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                        )
+                        zoneDepilateList.forEach { zoneDepilate ->
+                            DetailItem(
+                                title = zoneDepilate.zone,
+                                value = zoneDepilate.intense.toString()
                             )
-                            listZone.forEach { zone ->
-                                DetailItem(
-                                    title = zone.name,
-                                    value = zone.intensity.toString()
-                                )
-                            }
                         }
                     }
+
                 }
                 DetailItem(title = "Observaciones", value = client.observation)
             }
