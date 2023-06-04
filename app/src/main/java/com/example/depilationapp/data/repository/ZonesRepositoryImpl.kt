@@ -14,7 +14,7 @@ import com.example.depilationapp.core.toMap
 
 @Singleton
 class ZonesRepositoryImpl @Inject constructor(
-    private val zonesRef : CollectionReference
+    private val zonesRef: CollectionReference
 ) : ZonesRepository {
 
 
@@ -35,6 +35,26 @@ class ZonesRepositoryImpl @Inject constructor(
         awaitClose { subscription.remove() }
     }
 
+    override fun getZonesFromFirestoreByClient(clientId: String) = callbackFlow {
+        val subscription = zonesRef.whereEqualTo("clientId", clientId)
+            .addSnapshotListener { snapshot, exception ->
+                if (exception != null) {
+                    trySend(Response.Failure(exception))
+                    return@addSnapshotListener
+                }
+
+                val zones = snapshot?.documents?.map { document ->
+                    mapToZone(document.data as Map<String, Any>)
+                }?.toMutableList() ?: mutableListOf<ZoneDepilate>()
+
+                trySend(Response.Success(zones))
+            }
+
+        awaitClose { subscription.remove() }
+    }
+
+
     override suspend fun saveZone(zone: ZoneDepilate) {
-        zonesRef.add(zone.toMap())    }
+        zonesRef.add(zone.toMap())
+    }
 }

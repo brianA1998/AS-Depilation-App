@@ -6,5 +6,6 @@ import kotlinx.coroutines.flow.Flow
 
 interface ZonesRepository {
     fun getZonesFromFirestore(): Flow<Response<List<ZoneDepilate>>>
+    fun getZonesFromFirestoreByClient(clientId: String): Flow<Response<List<ZoneDepilate>>>
     suspend fun saveZone(zone: ZoneDepilate)
 }
