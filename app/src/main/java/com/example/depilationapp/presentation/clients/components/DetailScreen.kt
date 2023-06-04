@@ -3,22 +3,26 @@ package com.example.depilationapp.presentation.clients.components
 import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.depilationapp.data.model.Client
+import com.example.depilationapp.data.model.ZoneDepilate
+import com.example.depilationapp.data.util.*
+import com.example.depilationapp.presentation.zones.ZonesViewModel
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DetailScreen(client: Client) {
+fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
+    viewModel.getZones(client.id)
+    val zonesResponse = viewModel.zonesResponse
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -50,23 +54,33 @@ fun DetailScreen(client: Client) {
                 )
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
                 DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
-                client.zoneDepilate?.let { zoneDepilateList ->
-                    if (zoneDepilateList.isNotEmpty()) {
-                        Text(
-                            text = "Zonas",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp,
-                            modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-                        )
-                        zoneDepilateList.forEach { zoneDepilate ->
+                Text(
+                    text = "Zonas",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 18.sp,
+                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                )
+                when (zonesResponse) {
+                    is Response.Loading -> {
+                        // Muestra un indicador de carga
+                    }
+                    is Response.Failure -> {
+                        // Muestra el error
+                        val exception = (zonesResponse as Response.Failure).e
+                        Text("Error: ${exception?.message}")
+                    }
+                    is Response.Success<*> -> {
+                        // Muestra las zonas recuperadas
+                        val zones = (zonesResponse as Response.Success<List<ZoneDepilate>>).data
+                        zones.forEach { zone ->
                             DetailItem(
-                                title = zoneDepilate.zone,
-                                value = zoneDepilate.intense.toString()
+                                title = zone.zone,
+                                value = zone.intense.toString()
                             )
                         }
                     }
-
                 }
+
                 DetailItem(title = "Observaciones", value = client.observation)
             }
         }

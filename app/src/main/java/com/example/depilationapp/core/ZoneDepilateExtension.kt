@@ -13,10 +13,10 @@ fun ZoneDepilate.toMap(): Map<String, Any> {
 
 fun mapToZone(data: Map<String, Any>): ZoneDepilate {
     return ZoneDepilate(
-        id = data["id"] as String,
-        clientId = data["clientId"] as String,
-        zone = data["zone"] as String,
-        intense = data["intensity"] as Int,
-        date = data["date"] as Long
+        id = data["id"] as? String ?: "",
+        clientId = data["clientId"] as? String ?: "",
+        zone = data["zone"] as? String ?: "",
+        intense = data["intensity"] as? Int ?: 0,
+        date = data["date"] as? Long ?: 0L
     )
 }

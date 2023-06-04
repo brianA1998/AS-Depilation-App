@@ -23,8 +23,11 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
 import androidx.compose.material.Typography
 import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.depilationapp.domain.use_case.UseCases
+import com.example.depilationapp.presentation.clients.ClientsViewModel
 import com.example.depilationapp.presentation.clients.components.AddClientScreen
+import com.example.depilationapp.presentation.zones.ZonesViewModel
 import lightThemeColors
 import javax.inject.Inject
 
@@ -51,10 +54,13 @@ fun MyApp(useCases: UseCases) {
         colors = colors,
     ) {
         val navController = rememberNavController()
+        val clientsViewModel: ClientsViewModel = hiltViewModel()
+        val zonesViewModel: ZonesViewModel = hiltViewModel()
+
 
         NavHost(navController, startDestination = Screen.ClientsScreen.route) {
             composable(Screen.ClientsScreen.route) {
-                ClientsScreen(navController = navController)
+                ClientsScreen(navController = navController, clientsViewModel)
             }
             composable(Screen.DetailScreen.route, arguments = listOf(navArgument("client") {
                 type = NavType.StringType
@@ -63,7 +69,7 @@ fun MyApp(useCases: UseCases) {
                 val json = Json { isLenient = true }
                 Log.d("MainActivity-Check", "jsonClient: $jsonClient")
                 val client = Json.decodeFromString<Client>(jsonClient)
-                DetailScreen(client = client)
+                DetailScreen(client = client, zonesViewModel)
             }
             composable(Screen.AddClientScreen.route) {
                 AddClientScreen(navController = navController, useCases = useCases)
