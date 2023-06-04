@@ -61,8 +61,11 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                     modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
                 )
                 when (zonesResponse) {
-                    is Response.Loading -> {
-                        // Muestra un indicador de carga
+                    is Response.Loading -> Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        CircularProgressIndicator()
                     }
                     is Response.Failure -> {
                         // Muestra el error
