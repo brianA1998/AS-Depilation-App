@@ -27,7 +27,7 @@ fun mapToClient(data: Map<String, Any>): Client {
     }
 
 
-    val listZoneRetoque = (data["zone_retoque"] as? List<String>)?.joinToString() ?: ""
+    val listZoneRetoque = (data["listZoneRetoque"] as? String ) ?: ""
 
 
     return Client(
@@ -36,8 +36,8 @@ fun mapToClient(data: Map<String, Any>): Client {
         surname = data["surname"] as? String ?: "",
         document = (data["document"] as? Number)?.toInt() ?: 0,
         province = Province.safeValueOf(data["province"] as String),
-        numberPhonePersonal = (data["number_phone"] as? Number)?.toLong() ?: 0,
-        numberPhoneOther = (data["number_phone_other"] as? Number)?.toLong() ?: 0,
+        numberPhonePersonal = (data["numberPhonePersonal"] as? Number)?.toLong() ?: 0,
+        numberPhoneOther = (data["numberPhoneOther"] as? Number)?.toLong() ?: 0,
         state = data["state"] as? Boolean ?: true,
         observation = data["observation"] as? String ?: "",
         listZoneRetoque = listZoneRetoque,
