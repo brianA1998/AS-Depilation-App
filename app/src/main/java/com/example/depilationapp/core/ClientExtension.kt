@@ -32,8 +32,8 @@ fun mapToClient(data: Map<String, Any>): Client {
 
     return Client(
         id = data["id"] as? String ?: "",
-        name = data["name"] as String ?: "",
-        surname = data["surname"] as String ?: "",
+        name = data["name"] as? String ?: "",
+        surname = data["surname"] as? String ?: "",
         document = (data["document"] as? Number)?.toInt() ?: 0,
         province = Province.safeValueOf(data["province"] as String),
         numberPhonePersonal = (data["number_phone"] as? Number)?.toLong() ?: 0,

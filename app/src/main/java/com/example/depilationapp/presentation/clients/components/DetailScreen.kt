@@ -22,7 +22,7 @@ import com.example.depilationapp.presentation.zones.ZonesViewModel
 fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
     viewModel.getZones(client.id)
     val zonesResponse = viewModel.zonesResponse
-
+    Log.d("zonasClient", "Client: $zonesResponse")
     Scaffold(
         topBar = {
             TopAppBar(
@@ -37,7 +37,7 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                Log.d("DetailScreen", "Client: $client")
+               // Log.d("DetailScreen", "Client: $client")
 
                 Spacer(modifier = Modifier.padding(10.dp))
                 DetailItem(title = "Nombre", value = client.name)
