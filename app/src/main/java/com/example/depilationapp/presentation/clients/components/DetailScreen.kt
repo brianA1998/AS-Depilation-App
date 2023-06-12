@@ -37,7 +37,7 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                     .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-               // Log.d("DetailScreen", "Client: $client")
+                // Log.d("DetailScreen", "Client: $client")
 
                 Spacer(modifier = Modifier.padding(10.dp))
                 DetailItem(title = "Nombre", value = client.name)
@@ -54,12 +54,18 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                 )
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
                 DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
-                Text(
-                    text = "Zonas",
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 18.sp,
-                    modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 4.dp),
+                    horizontalArrangement = Arrangement.Start
+                ) {
+                    Text(
+                        text = "Zonas",
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 18.sp
+                    )
+                }
                 when (zonesResponse) {
                     is Response.Loading -> Box(
                         modifier = Modifier.fillMaxSize(),
@@ -76,10 +82,7 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                         // Muestra las zonas recuperadas
                         val zones = (zonesResponse as Response.Success<List<ZoneDepilate>>).data
                         zones.forEach { zone ->
-                            DetailItem(
-                                title = zone.zone,
-                                value = zone.intense.toString()
-                            )
+                            DetailItemZone(zone = zone.zone, intensity = zone.intense)
                         }
                     }
                 }
@@ -111,3 +114,27 @@ fun DetailItem(title: String, value: String) {
         )
     }
 }
+
+@Composable
+fun DetailItemZone(zone: String, intensity: Int) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 4.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = zone,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
+            modifier = Modifier.weight(1f) // Asignar proporción de espacio a ocupar
+        )
+        Spacer(modifier = Modifier.padding(8.dp)) // Espaciador para separación
+        Text(
+            text = intensity.toString(),
+            fontSize = 18.sp,
+            modifier = Modifier.weight(1f) // Asignar proporción de espacio a ocupar
+        )
+    }
+}
+
