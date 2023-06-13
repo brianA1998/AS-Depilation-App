@@ -127,13 +127,13 @@ fun DetailItemZone(zone: String, intensity: Int) {
             text = zone,
             fontWeight = FontWeight.Bold,
             fontSize = 18.sp,
-            modifier = Modifier.weight(1f) // Asignar proporción de espacio a ocupar
+            modifier = Modifier.weight(1f)
         )
-        Spacer(modifier = Modifier.padding(8.dp)) // Espaciador para separación
+        Spacer(modifier = Modifier.padding(8.dp))
         Text(
             text = intensity.toString(),
             fontSize = 18.sp,
-            modifier = Modifier.weight(1f) // Asignar proporción de espacio a ocupar
+            modifier = Modifier.weight(1f)
         )
     }
 }
