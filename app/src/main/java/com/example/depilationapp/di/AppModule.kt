@@ -36,8 +36,11 @@ object AppModule {
     fun provideZonesRef() = Firebase.firestore.collection(Constants.ZONES)
 
     @Provides
-    fun provideClientsRepository(@ClientsCollection clientsRef: CollectionReference): ClientsRepository =
-        ClientsRepositoryImpl(clientsRef)
+    fun provideClientsRepository(
+        @ClientsCollection clientsRef: CollectionReference,
+        @ZonesCollection zonesRef: CollectionReference
+    ): ClientsRepository =
+        ClientsRepositoryImpl(clientsRef, zonesRef)
 
     @Provides
     fun provideZonesRepository(@ZonesCollection zonesRef: CollectionReference): ZonesRepository =

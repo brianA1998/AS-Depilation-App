@@ -14,7 +14,8 @@ import javax.inject.Singleton
 
 @Singleton
 class ClientsRepositoryImpl @Inject constructor(
-    private val clientsRef: CollectionReference
+    private val clientsRef: CollectionReference,
+    private val zonesRef: CollectionReference,
 ) : ClientsRepository {
 
 

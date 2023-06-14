@@ -15,7 +15,7 @@ data class Client(
     var numberPhoneOther: Long = 0,
     var state: Boolean = false,
     var observation: String = "",
-    val listZoneRetoque: String = "",
+    var listZoneRetoque: String = "",
     @Contextual val zoneDepilate: List<ZoneDepilate> = listOf(),
 )
 
