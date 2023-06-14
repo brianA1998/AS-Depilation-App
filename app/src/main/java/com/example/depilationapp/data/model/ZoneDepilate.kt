@@ -16,8 +16,8 @@ import kotlinx.serialization.encoding.Encoder
 
 @Serializable
 data class ZoneDepilate(
-    val id: String = "",
-    val clientId: String = "",
+    var id: String = "",
+    var clientId: String = "",
     val zone: String = "",
     val intense: Int = 0,
     val date: Long = System.currentTimeMillis()

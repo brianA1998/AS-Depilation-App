@@ -6,7 +6,7 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Client(
-    val id: String = "a123",
+    var id: String = "a123",
     var name: String = "",
     var surname: String = "",
     var document: Int? = null,
