@@ -4,5 +4,5 @@ data class UseCases(
     val getClients: GetClients,
     val saveClient: SaveClient,
     val getZones: GetZones,
-    private val saveZone: SaveZone,
+    val saveZone: SaveZone,
 )

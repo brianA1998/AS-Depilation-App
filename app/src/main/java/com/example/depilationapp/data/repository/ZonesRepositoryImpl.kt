@@ -1,7 +1,9 @@
 package com.example.depilationapp.data.repository
 
+import android.util.Log
 import com.example.depilationapp.core.mapToZone
 import com.example.depilationapp.data.model.ZoneDepilate
+import com.example.depilationapp.data.model.toMap
 import com.example.depilationapp.data.util.Response
 import com.example.depilationapp.domain.repository.ZonesRepository
 import com.google.firebase.firestore.CollectionReference
@@ -10,7 +12,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 import javax.inject.Singleton
-import com.example.depilationapp.core.toMap
 
 @Singleton
 class ZonesRepositoryImpl @Inject constructor(
@@ -36,6 +37,7 @@ class ZonesRepositoryImpl @Inject constructor(
     }
 
     override fun getZonesFromFirestoreByClient(clientId: String) = callbackFlow {
+        Log.e("clientId_field ", clientId)
         val subscription = zonesRef.whereEqualTo("clientId", clientId)
             .addSnapshotListener { snapshot, exception ->
                 if (exception != null) {

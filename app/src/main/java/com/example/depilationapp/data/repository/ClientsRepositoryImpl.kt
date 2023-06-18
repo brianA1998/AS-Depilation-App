@@ -1,7 +1,7 @@
 package com.example.depilationapp.data.repository
 
 import com.example.depilationapp.core.mapToClient
-import com.example.depilationapp.core.toMap
+import com.example.depilationapp.core.mapToZone
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.toMap
 import com.example.depilationapp.data.util.Response.Failure
@@ -27,8 +27,17 @@ class ClientsRepositoryImpl @Inject constructor(
                 return@addSnapshotListener
             }
 
-            val clients = snapshot?.documents?.map { document ->
-                mapToClient(document.data as Map<String, Any>)
+            val clients = snapshot?.documents?.mapNotNull { document ->
+                val client = mapToClient(document.data as Map<String, Any>)
+                val zoneDepilateSubscription = zonesRef
+                    .whereEqualTo("clientId", client.id)
+                    .get()
+                    .addOnSuccessListener { zonesSnapshot ->
+                        client.zoneDepilate = zonesSnapshot.documents.mapNotNull { zoneDocument ->
+                            mapToZone(zoneDocument.data as Map<String, Any>)
+                        }
+                    }
+                client
             }?.toMutableList() ?: mutableListOf()
 
             trySend(Success(clients))

@@ -3,15 +3,7 @@ package com.example.depilationapp.core
 import android.util.Log
 import com.example.depilationapp.data.model.ZoneDepilate
 
-fun ZoneDepilate.toMap(): Map<String, Any> {
-    return mapOf(
-        "id" to this.id,
-        "clientId" to this.clientId,
-        "zone" to this.zone,
-        "intense" to this.intense,
-        "date" to this.date
-    )
-}
+
 
 fun mapToZone(data: Map<String, Any>): ZoneDepilate {
     val zone = ZoneDepilate(

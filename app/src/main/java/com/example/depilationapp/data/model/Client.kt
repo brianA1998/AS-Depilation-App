@@ -16,7 +16,7 @@ data class Client(
     var state: Boolean = false,
     var observation: String = "",
     var listZoneRetoque: String = "",
-    @Contextual val zoneDepilate: List<ZoneDepilate> = listOf(),
+    @Contextual var zoneDepilate: List<ZoneDepilate> = listOf(),
 )
 
 fun Client.toMap(): Map<String, Any> {

@@ -22,3 +22,14 @@ data class ZoneDepilate(
     val intense: Int = 0,
     val date: Long = System.currentTimeMillis()
 )
+
+fun ZoneDepilate.toMap(): Map<String, Any> {
+    return mapOf(
+        "id" to id,
+        "clientId" to clientId,
+        "zone" to zone,
+        "intense" to intense,
+        "date" to date
+    )
+}
+

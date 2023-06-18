@@ -22,6 +22,7 @@ import com.example.depilationapp.data.model.Zone
 import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.domain.use_case.UseCases
 import kotlinx.coroutines.launch
+import java.util.*
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
@@ -165,7 +166,9 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
             Button(
                 onClick = {
                     coroutineScope.launch {
+                        val clientId = UUID.randomUUID().toString()
                         val client = Client(
+                            id = clientId,
                             name = name,
                             surname = surname,
                             document = document.toIntOrNull(),
@@ -175,19 +178,21 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                             state = false,
                             observation = observation,
                             listZoneRetoque = "",
-                            zoneDepilate = if (zone.isNotEmpty()) listOf(
-                                ZoneDepilate(
-                                    id = "tu id aquí", // Necesitarás generar una id para esta zona depilada
-                                    clientId = "el id del cliente aquí", // Necesitarás proporcionar el id del cliente
-                                    zone = zone,
-                                    intense = intensity,
-                                    date = System.currentTimeMillis() // o cualquier fecha que quieras proporcionar
-                                )
-                            ) else listOf()
                         )
                         Log.d("Number_Client", "Number personal: ${client.numberPhonePersonal}")
                         Log.d("Number_Client", "Number other: ${client.numberPhoneOther}")
                         useCases.saveClient(client)
+
+                        if (zone.isNotEmpty()) {
+                            val zoneDepilate = ZoneDepilate(
+                                id = UUID.randomUUID().toString(),
+                                clientId = clientId,
+                                zone = zone,
+                                intense = intensity,
+                                date = System.currentTimeMillis()
+                            )
+                            useCases.saveZone(zoneDepilate)
+                        }
                         navController.navigate("clients")
                     }
                 },
