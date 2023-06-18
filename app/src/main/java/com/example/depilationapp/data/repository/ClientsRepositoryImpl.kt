@@ -49,13 +49,21 @@ class ClientsRepositoryImpl @Inject constructor(
     override suspend fun saveClient(client: Client) {
 
         val clientDocumentRef = clientsRef.document()
-        client.id = clientDocumentRef.id
+
+        if (client.id == "a123") {
+            client.id = clientDocumentRef.id
+        }
         clientDocumentRef.set(client.toMap())
+
 
         client.zoneDepilate.forEach { zoneDepilate ->
             zoneDepilate.clientId = client.id // Actualizamos el clientId para cada zonaDepilate
             val zoneDocumentRef = zonesRef.document() // crea una referencia a un nuevo documento
-            zoneDepilate.id = zoneDocumentRef.id // asigna la id del documento a la zona
+
+            if (zoneDepilate.id.isEmpty()) {
+                zoneDepilate.id = zoneDocumentRef.id // asigna la id del documento a la zona
+            }
+
             zoneDocumentRef.set(zoneDepilate.toMap()) // guarda la zona en Firestore
         }
     }
