@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -31,7 +32,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     val (surname, setSurname) = remember { mutableStateOf("") }
     val (document, setDocument) = remember { mutableStateOf("") }
     var intensity by remember { mutableStateOf("") }
-    val (province, setProvince) = remember { mutableStateOf("") }
+    var selectedProvince by remember { mutableStateOf(Province.NONE) }
+    var expanded by remember { mutableStateOf(false) }
     val (numberPhonePersonal, setNumberPhonePersonal) = remember { mutableStateOf("") }
     val (numberPhoneOther, setNumberPhoneOther) = remember { mutableStateOf("") }
     val (observation, setObservation) = remember { mutableStateOf("") }
@@ -91,15 +93,42 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 shape = RoundedCornerShape(8.dp)
             )
 
-            OutlinedTextField(
-                value = province,
-                onValueChange = setProvince,
-                label = { Text("Provincia") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                shape = RoundedCornerShape(8.dp)
-            )
+            Box {
+                OutlinedTextField(
+                    value = selectedProvince.province,
+                    onValueChange = { /* Evitar modificaciones */ },
+                    label = { Text("Provincia") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)
+                        .onFocusChanged {
+                            expanded = it.isFocused
+                        },
+                    shape = RoundedCornerShape(8.dp),
+                    readOnly = true, // Asegurarse de que el usuario no pueda escribir manualmente
+                    trailingIcon = {
+                        Icon(
+                            Icons.Filled.ArrowDropDown,
+                            contentDescription = null,
+                            Modifier.clickable { expanded = !expanded }
+                        )
+                    },
+                )
+
+                DropdownMenu(
+                    expanded = expanded,
+                    onDismissRequest = { expanded = false }
+                ) {
+                    Province.values().forEach { province ->
+                        DropdownMenuItem(onClick = {
+                            selectedProvince = province
+                            expanded = false
+                        }) {
+                            Text(province.province)
+                        }
+                    }
+                }
+            }
 
 
             OutlinedTextField(
@@ -173,7 +202,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                             name = name,
                             surname = surname,
                             document = document.toIntOrNull(),
-                            province = Province.safeValueOf(province) ?: Province.NONE,
+                            province = selectedProvince,
                             numberPhonePersonal = numberPhonePersonal.toLongOrNull() ?: 0,
                             numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
                             state = false,
