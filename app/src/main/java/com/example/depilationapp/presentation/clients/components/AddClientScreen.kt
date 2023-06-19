@@ -30,7 +30,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     val (name, setName) = remember { mutableStateOf("") }
     val (surname, setSurname) = remember { mutableStateOf("") }
     val (document, setDocument) = remember { mutableStateOf("") }
-    val (intensity, setIntensity) = remember { mutableStateOf(0) }
+    var intensity by remember { mutableStateOf("") }
     val (province, setProvince) = remember { mutableStateOf("") }
     val (numberPhonePersonal, setNumberPhonePersonal) = remember { mutableStateOf("") }
     val (numberPhoneOther, setNumberPhoneOther) = remember { mutableStateOf("") }
@@ -144,13 +144,14 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
             )
 
             OutlinedTextField(
-                value = intensity.toString(),
+                value = intensity,
                 onValueChange = { newInput ->
                     if (newInput.isNotEmpty() && newInput.all { it.isDigit() }) {
-                        setIntensity(newInput.toInt())
+                        intensity = newInput
                     } else if (newInput.isEmpty()) {
-                        setIntensity(0) // Puedes definir un valor por defecto para cuando el campo esté vacío
+                        intensity = ""
                     }
+
                 },
                 label = { Text("Intensidad de depilación") },
                 modifier = Modifier
@@ -179,8 +180,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                             observation = observation,
                             listZoneRetoque = "",
                         )
-                        Log.d("Number_Client", "Number personal: ${client.numberPhonePersonal}")
-                        Log.d("Number_Client", "Number other: ${client.numberPhoneOther}")
+
                         useCases.saveClient(client)
 
                         if (zone.isNotEmpty()) {
@@ -188,7 +188,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                                 id = UUID.randomUUID().toString(),
                                 clientId = clientId,
                                 zone = zone,
-                                intense = intensity,
+                                intense = intensity.toInt(),
                                 date = System.currentTimeMillis()
                             )
                             useCases.saveZone(zoneDepilate)

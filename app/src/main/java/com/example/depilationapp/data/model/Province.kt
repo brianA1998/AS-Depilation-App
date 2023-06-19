@@ -16,4 +16,3 @@ enum class Province(val province: String) {
     }
 }
 
-
