@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.Client
@@ -46,7 +47,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     var showDialog by remember { mutableStateOf(false) }
 
     // Variables for the dialog inputs
-    var dialogIntensity by remember { mutableStateOf("") }
+    var dialogIntensity by remember { mutableStateOf(1f) }
     var dialogZone by remember { mutableStateOf("") }
 
     Scaffold(
@@ -189,52 +190,59 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
             ) {
                 Text("Añadir zona de depilación")
             }
-
             if (showDialog) {
                 Dialog(onDismissRequest = { showDialog = false }) {
-                    Column(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(16.dp)
-                    ) {
-                        Text("Añadir zona de depilación", style = MaterialTheme.typography.h6)
-
-                        OutlinedTextField(
-                            value = dialogIntensity,
-                            onValueChange = { newInput ->
-                                if (newInput.isNotEmpty() && newInput.all { it.isDigit() }) {
-                                    dialogIntensity = newInput
-                                } else if (newInput.isEmpty()) {
-                                    dialogIntensity = ""
-                                }
-                            },
-                            label = { Text("Intensidad de depilación") },
-                            modifier = Modifier
+                    Surface(shape = RoundedCornerShape(8.dp)) {
+                        Column(
+                            Modifier
                                 .fillMaxWidth()
-                                .padding(bottom = 8.dp),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            shape = RoundedCornerShape(8.dp)
-                        )
-
-                        ZoneDropdown(dialogZone, { newZone -> dialogZone = newZone })
-
-                        Button(
-                            onClick = {
-                                val newZoneDepilate = ZoneDepilate(
-                                    id = UUID.randomUUID().toString(),
-                                    clientId = "", // We'll set this later when creating the client
-                                    zone = dialogZone,
-                                    intense = dialogIntensity.toIntOrNull() ?: 0,
-                                    date = System.currentTimeMillis()
-                                )
-                                zonesDepilated = zonesDepilated + newZoneDepilate
-                                showDialog = false // Close the dialog
-                            },
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(top = 8.dp)
+                                .padding(16.dp)
                         ) {
-                            Text("Guardar zona de depilación")
+                            Text(
+                                "Añadir zona de depilación",
+                                style = MaterialTheme.typography.h6,
+                                modifier = Modifier.padding(bottom = 8.dp)
+                            )
+                            ZoneDropdown(dialogZone) { newZone -> dialogZone = newZone }
+                            Text(
+                                "Intensidad de depilación",
+                                style = MaterialTheme.typography.subtitle1,
+                                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                            )
+                            Slider(
+                                value = dialogIntensity,
+                                onValueChange = { newIntensity ->
+                                    dialogIntensity = newIntensity
+                                },
+                                valueRange = 1f..18f,
+                                steps = 17,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+
+                            // Displaying selected intensity
+                            Text(
+                                text = "Intensidad seleccionada: ${dialogIntensity.toInt()}",
+                                style = MaterialTheme.typography.body2,
+                                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                            )
+                            Button(
+                                onClick = {
+                                    val newZoneDepilate = ZoneDepilate(
+                                        id = UUID.randomUUID().toString(),
+                                        clientId = "", // We'll set this later when creating the client
+                                        zone = dialogZone,
+                                        intense = dialogIntensity.toInt(), // Converting intensity to Int
+                                        date = System.currentTimeMillis()
+                                    )
+                                    zonesDepilated = zonesDepilated + newZoneDepilate
+                                    showDialog = false // Close the dialog
+                                },
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(top = 8.dp)
+                            ) {
+                                Text("Guardar zona de depilación")
+                            }
                         }
                     }
                 }
@@ -328,6 +336,3 @@ fun ZoneDropdown(zone: String, setZone: (String) -> Unit) {
         }
     }
 }
-
-
-

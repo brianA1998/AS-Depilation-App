@@ -2,7 +2,6 @@ package com.example.depilationapp.core
 
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.Province
-import com.example.depilationapp.data.model.Zone
 import com.example.depilationapp.data.model.ZoneDepilate
 
 fun mapToClient(data: Map<String, Any>): Client {
