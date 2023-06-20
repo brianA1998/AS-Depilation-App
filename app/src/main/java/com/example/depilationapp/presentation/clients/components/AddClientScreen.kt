@@ -235,7 +235,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     }
 }
 
-val zones = listOf("BRAZO", "ESPALDA", "PIERNAS")
+val zones = listOf("BRAZO", "ESPALDA", "PIERNAS", "CARA", "CAVADO")
 
 @Composable
 fun ZoneDropdown(zone: String, setZone: (String) -> Unit) {
