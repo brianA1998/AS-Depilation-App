@@ -37,6 +37,6 @@ fun Client.toMap(): Map<String, Any> {
         "state" to state,
         "observation" to observation,
         "listZoneRetoque" to (listZoneRetoque ?: ""),
-        "zone" to zoneDepilateList
+        "zoneDepilate" to zoneDepilateList
     )
 }

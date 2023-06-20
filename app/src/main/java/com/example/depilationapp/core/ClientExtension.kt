@@ -7,14 +7,8 @@ import com.example.depilationapp.data.model.ZoneDepilate
 
 fun mapToClient(data: Map<String, Any>): Client {
 
-    val zoneData = (data["zone"] as? List<Map<String, Any>>) ?: listOf()
     val zoneDepilateData = (data["zone_depilate"] as? List<Map<String, Any>>) ?: listOf()
 
-    val listZone = zoneData.map { zoneMap ->
-        val zoneName = zoneMap["zone"] as? String ?: ""
-        val zoneIntensity = zoneMap["intense"] as? Int ?: 0
-        Zone(zoneName, zoneIntensity)
-    }
 
     val zoneDepilate = zoneDepilateData.map { zoneDepilateMap ->
         ZoneDepilate(
@@ -27,7 +21,7 @@ fun mapToClient(data: Map<String, Any>): Client {
     }
 
 
-    val listZoneRetoque = (data["listZoneRetoque"] as? String ) ?: ""
+    val listZoneRetoque = (data["listZoneRetoque"] as? String) ?: ""
 
 
     return Client(

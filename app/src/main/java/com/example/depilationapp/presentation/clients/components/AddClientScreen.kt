@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
@@ -16,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.Province
@@ -39,6 +42,12 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     val (observation, setObservation) = remember { mutableStateOf("") }
     val (zone, setZone) = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
+    var zonesDepilated by remember { mutableStateOf(listOf<ZoneDepilate>()) }
+    var showDialog by remember { mutableStateOf(false) }
+
+    // Variables for the dialog inputs
+    var dialogIntensity by remember { mutableStateOf("") }
+    var dialogZone by remember { mutableStateOf("") }
 
     Scaffold(
         topBar = {
@@ -46,7 +55,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 title = { Text("Agregar un nuevo cliente") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
-                        Icon(Icons.Filled.ArrowBack, contentDescription = "Atrás")
+                        Icon(Icons.Filled.ArrowBack, contentDescription = " Atrás")
                     }
                 }
             )
@@ -172,26 +181,75 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 shape = RoundedCornerShape(8.dp)
             )
 
-            OutlinedTextField(
-                value = intensity,
-                onValueChange = { newInput ->
-                    if (newInput.isNotEmpty() && newInput.all { it.isDigit() }) {
-                        intensity = newInput
-                    } else if (newInput.isEmpty()) {
-                        intensity = ""
-                    }
-
-                },
-                label = { Text("Intensidad de depilación") },
+            Button(
+                onClick = { showDialog = true },
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(bottom = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                shape = RoundedCornerShape(8.dp)
-            )
+            ) {
+                Text("Añadir zona de depilación")
+            }
 
+            if (showDialog) {
+                Dialog(onDismissRequest = { showDialog = false }) {
+                    Column(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp)
+                    ) {
+                        Text("Añadir zona de depilación", style = MaterialTheme.typography.h6)
 
-            ZoneDropdown(zone, setZone)
+                        OutlinedTextField(
+                            value = dialogIntensity,
+                            onValueChange = { newInput ->
+                                if (newInput.isNotEmpty() && newInput.all { it.isDigit() }) {
+                                    dialogIntensity = newInput
+                                } else if (newInput.isEmpty()) {
+                                    dialogIntensity = ""
+                                }
+                            },
+                            label = { Text("Intensidad de depilación") },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(bottom = 8.dp),
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                            shape = RoundedCornerShape(8.dp)
+                        )
+
+                        ZoneDropdown(dialogZone, { newZone -> dialogZone = newZone })
+
+                        Button(
+                            onClick = {
+                                val newZoneDepilate = ZoneDepilate(
+                                    id = UUID.randomUUID().toString(),
+                                    clientId = "", // We'll set this later when creating the client
+                                    zone = dialogZone,
+                                    intense = dialogIntensity.toIntOrNull() ?: 0,
+                                    date = System.currentTimeMillis()
+                                )
+                                zonesDepilated = zonesDepilated + newZoneDepilate
+                                showDialog = false // Close the dialog
+                            },
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(top = 8.dp)
+                        ) {
+                            Text("Guardar zona de depilación")
+                        }
+                    }
+                }
+            }
+
+            // Display list of zones to depilate
+            LazyColumn {
+                items(zonesDepilated) { zoneDepilate ->
+                    Text(
+                        text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
+                        Modifier.padding(bottom = 4.dp)
+                    )
+                }
+            }
+
 
             Button(
                 onClick = {
@@ -208,19 +266,14 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                             state = false,
                             observation = observation,
                             listZoneRetoque = "",
+                            zoneDepilate = zonesDepilated.map { it.copy(clientId = clientId) }, // Update clientId in ZoneDepilate objects
+
                         )
 
                         useCases.saveClient(client)
 
-                        if (zone.isNotEmpty()) {
-                            val zoneDepilate = ZoneDepilate(
-                                id = UUID.randomUUID().toString(),
-                                clientId = clientId,
-                                zone = zone,
-                                intense = intensity.toInt(),
-                                date = System.currentTimeMillis()
-                            )
-                            useCases.saveZone(zoneDepilate)
+                        zonesDepilated.forEach { zoneDepilate ->
+                            useCases.saveZone(zoneDepilate.copy(clientId = clientId)) // Update clientId in ZoneDepilate objects
                         }
                         navController.navigate("clients")
                     }
@@ -274,7 +327,6 @@ fun ZoneDropdown(zone: String, setZone: (String) -> Unit) {
             }
         }
     }
-
 }
 
 
