@@ -6,8 +6,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
@@ -62,236 +64,238 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
             )
         }
     ) {
-        Column(
+        LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(16.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            OutlinedTextField(
-                value = name,
-                onValueChange = setName,
-                label = { Text("Nombre") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                shape = RoundedCornerShape(8.dp),
-            )
-
-            OutlinedTextField(
-                value = surname,
-                onValueChange = setSurname,
-                label = { Text("Apellido") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                shape = RoundedCornerShape(8.dp)
-            )
-
-            OutlinedTextField(
-                value = document,
-                onValueChange = { newInput ->
-                    if (newInput.all { it.isDigit() }) {
-                        setDocument(newInput)
-                    }
-                },
-                label = { Text("Documento") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                shape = RoundedCornerShape(8.dp)
-            )
-
-            Box {
+            item {
                 OutlinedTextField(
-                    value = selectedProvince.province,
-                    onValueChange = { /* Evitar modificaciones */ },
-                    label = { Text("Provincia") },
+                    value = name,
+                    onValueChange = setName,
+                    label = { Text("Nombre") },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)
-                        .onFocusChanged {
-                            expanded = it.isFocused
-                        },
+                        .padding(bottom = 8.dp),
                     shape = RoundedCornerShape(8.dp),
-                    readOnly = true, // Asegurarse de que el usuario no pueda escribir manualmente
-                    trailingIcon = {
-                        Icon(
-                            Icons.Filled.ArrowDropDown,
-                            contentDescription = null,
-                            Modifier.clickable { expanded = !expanded }
-                        )
-                    },
                 )
 
-                DropdownMenu(
-                    expanded = expanded,
-                    onDismissRequest = { expanded = false }
-                ) {
-                    Province.values().forEach { province ->
-                        DropdownMenuItem(onClick = {
-                            selectedProvince = province
-                            expanded = false
-                        }) {
-                            Text(province.province)
+                OutlinedTextField(
+                    value = surname,
+                    onValueChange = setSurname,
+                    label = { Text("Apellido") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    shape = RoundedCornerShape(8.dp)
+                )
+
+                OutlinedTextField(
+                    value = document,
+                    onValueChange = { newInput ->
+                        if (newInput.all { it.isDigit() }) {
+                            setDocument(newInput)
                         }
-                    }
-                }
-            }
+                    },
+                    label = { Text("Documento") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    shape = RoundedCornerShape(8.dp)
+                )
 
-
-            OutlinedTextField(
-                value = numberPhonePersonal,
-                onValueChange = { newInput ->
-                    if (newInput.all { it.isDigit() }) {
-                        setNumberPhonePersonal(newInput)
-                    }
-                },
-                label = { Text("Teléfono personal") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                shape = RoundedCornerShape(8.dp)
-            )
-
-            OutlinedTextField(
-                value = numberPhoneOther,
-                onValueChange = { newInput ->
-                    if (newInput.all { it.isDigit() }) {
-                        setNumberPhoneOther(newInput)
-                    }
-                },
-                label = { Text("Teléfono alternativo") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                shape = RoundedCornerShape(8.dp)
-            )
-
-
-            OutlinedTextField(
-                value = observation,
-                onValueChange = setObservation,
-                label = { Text("Observaciones") },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-                shape = RoundedCornerShape(8.dp)
-            )
-
-            Button(
-                onClick = { showDialog = true },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 8.dp),
-            ) {
-                Text("Añadir zona de depilación")
-            }
-            if (showDialog) {
-                Dialog(onDismissRequest = { showDialog = false }) {
-                    Surface(shape = RoundedCornerShape(8.dp)) {
-                        Column(
-                            Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ) {
-                            Text(
-                                "Añadir zona de depilación",
-                                style = MaterialTheme.typography.h6,
-                                modifier = Modifier.padding(bottom = 8.dp)
+                Box {
+                    OutlinedTextField(
+                        value = selectedProvince.province,
+                        onValueChange = { /* Evitar modificaciones */ },
+                        label = { Text("Provincia") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp)
+                            .onFocusChanged {
+                                expanded = it.isFocused
+                            },
+                        shape = RoundedCornerShape(8.dp),
+                        readOnly = true, // Asegurarse de que el usuario no pueda escribir manualmente
+                        trailingIcon = {
+                            Icon(
+                                Icons.Filled.ArrowDropDown,
+                                contentDescription = null,
+                                Modifier.clickable { expanded = !expanded }
                             )
-                            ZoneDropdown(dialogZone) { newZone -> dialogZone = newZone }
-                            Text(
-                                "Intensidad de depilación",
-                                style = MaterialTheme.typography.subtitle1,
-                                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-                            )
-                            Slider(
-                                value = dialogIntensity,
-                                onValueChange = { newIntensity ->
-                                    dialogIntensity = newIntensity
-                                },
-                                valueRange = 1f..18f,
-                                steps = 17,
-                                modifier = Modifier.fillMaxWidth()
-                            )
+                        },
+                    )
 
-                            // Displaying selected intensity
-                            Text(
-                                text = "Intensidad seleccionada: ${dialogIntensity.toInt()}",
-                                style = MaterialTheme.typography.body2,
-                                modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
-                            )
-                            Button(
-                                onClick = {
-                                    val newZoneDepilate = ZoneDepilate(
-                                        id = UUID.randomUUID().toString(),
-                                        clientId = "", // We'll set this later when creating the client
-                                        zone = dialogZone,
-                                        intense = dialogIntensity.toInt(), // Converting intensity to Int
-                                        date = System.currentTimeMillis()
-                                    )
-                                    zonesDepilated = zonesDepilated + newZoneDepilate
-                                    showDialog = false // Close the dialog
-                                },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 8.dp)
-                            ) {
-                                Text("Guardar zona de depilación")
+                    DropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false }
+                    ) {
+                        Province.values().forEach { province ->
+                            DropdownMenuItem(onClick = {
+                                selectedProvince = province
+                                expanded = false
+                            }) {
+                                Text(province.province)
                             }
                         }
                     }
                 }
-            }
 
-            // Display list of zones to depilate
-            LazyColumn {
-                items(zonesDepilated) { zoneDepilate ->
-                    Text(
-                        text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
-                        Modifier.padding(bottom = 4.dp)
-                    )
+
+                OutlinedTextField(
+                    value = numberPhonePersonal,
+                    onValueChange = { newInput ->
+                        if (newInput.all { it.isDigit() }) {
+                            setNumberPhonePersonal(newInput)
+                        }
+                    },
+                    label = { Text("Teléfono personal") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    shape = RoundedCornerShape(8.dp)
+                )
+
+                OutlinedTextField(
+                    value = numberPhoneOther,
+                    onValueChange = { newInput ->
+                        if (newInput.all { it.isDigit() }) {
+                            setNumberPhoneOther(newInput)
+                        }
+                    },
+                    label = { Text("Teléfono alternativo") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                    shape = RoundedCornerShape(8.dp)
+                )
+
+
+                OutlinedTextField(
+                    value = observation,
+                    onValueChange = setObservation,
+                    label = { Text("Observaciones") },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                    shape = RoundedCornerShape(8.dp)
+                )
+
+                Button(
+                    onClick = { showDialog = true },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp),
+                ) {
+                    Text("Añadir zona de depilación")
+                }
+                if (showDialog) {
+                    Dialog(onDismissRequest = { showDialog = false }) {
+                        Surface(shape = RoundedCornerShape(8.dp)) {
+                            Column(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                Text(
+                                    "Añadir zona de depilación",
+                                    style = MaterialTheme.typography.h6,
+                                    modifier = Modifier.padding(bottom = 8.dp)
+                                )
+                                ZoneDropdown(dialogZone) { newZone -> dialogZone = newZone }
+                                Text(
+                                    "Intensidad de depilación",
+                                    style = MaterialTheme.typography.subtitle1,
+                                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                                )
+                                Slider(
+                                    value = dialogIntensity,
+                                    onValueChange = { newIntensity ->
+                                        dialogIntensity = newIntensity
+                                    },
+                                    valueRange = 1f..18f,
+                                    steps = 17,
+                                    modifier = Modifier.fillMaxWidth()
+                                )
+
+                                // Displaying selected intensity
+                                Text(
+                                    text = "Intensidad seleccionada: ${dialogIntensity.toInt()}",
+                                    style = MaterialTheme.typography.body2,
+                                    modifier = Modifier.padding(top = 8.dp, bottom = 8.dp)
+                                )
+                                Button(
+                                    onClick = {
+                                        val newZoneDepilate = ZoneDepilate(
+                                            id = UUID.randomUUID().toString(),
+                                            clientId = "", // We'll set this later when creating the client
+                                            zone = dialogZone,
+                                            intense = dialogIntensity.toInt(), // Converting intensity to Int
+                                            date = System.currentTimeMillis()
+                                        )
+                                        zonesDepilated = zonesDepilated + newZoneDepilate
+                                        showDialog = false // Close the dialog
+                                    },
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(top = 8.dp)
+                                ) {
+                                    Text("Guardar zona de depilación")
+                                }
+                            }
+                        }
+                    }
+                }
+
+                // Display list of zones to depilate
+                LazyColumn {
+                    items(zonesDepilated) { zoneDepilate ->
+                        Text(
+                            text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
+                            Modifier.padding(bottom = 4.dp)
+                        )
+                    }
+                }
+
+
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+                            val clientId = UUID.randomUUID().toString()
+                            val client = Client(
+                                id = clientId,
+                                name = name,
+                                surname = surname,
+                                document = document.toIntOrNull(),
+                                province = selectedProvince,
+                                numberPhonePersonal = numberPhonePersonal.toLongOrNull() ?: 0,
+                                numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
+                                state = false,
+                                observation = observation,
+                                listZoneRetoque = "",
+                                zoneDepilate = zonesDepilated.map { it.copy(clientId = clientId) }, // Update clientId in ZoneDepilate objects
+
+                            )
+
+                            useCases.saveClient(client)
+
+                            zonesDepilated.forEach { zoneDepilate ->
+                                useCases.saveZone(zoneDepilate.copy(clientId = clientId)) // Update clientId in ZoneDepilate objects
+                            }
+                            navController.navigate("clients")
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text("Guardar cliente")
                 }
             }
 
-
-            Button(
-                onClick = {
-                    coroutineScope.launch {
-                        val clientId = UUID.randomUUID().toString()
-                        val client = Client(
-                            id = clientId,
-                            name = name,
-                            surname = surname,
-                            document = document.toIntOrNull(),
-                            province = selectedProvince,
-                            numberPhonePersonal = numberPhonePersonal.toLongOrNull() ?: 0,
-                            numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
-                            state = false,
-                            observation = observation,
-                            listZoneRetoque = "",
-                            zoneDepilate = zonesDepilated.map { it.copy(clientId = clientId) }, // Update clientId in ZoneDepilate objects
-
-                        )
-
-                        useCases.saveClient(client)
-
-                        zonesDepilated.forEach { zoneDepilate ->
-                            useCases.saveZone(zoneDepilate.copy(clientId = clientId)) // Update clientId in ZoneDepilate objects
-                        }
-                        navController.navigate("clients")
-                    }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            ) {
-                Text("Guardar cliente")
-            }
         }
     }
 }
