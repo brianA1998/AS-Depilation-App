@@ -18,6 +18,10 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -45,12 +49,14 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     val (observation, setObservation) = remember { mutableStateOf("") }
     val (zone, setZone) = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
-    var zonesDepilated by remember { mutableStateOf(listOf<ZoneDepilate>()) }
+    var zonesDepilated = remember { mutableStateListOf<ZoneDepilate>() }
     var showDialog by remember { mutableStateOf(false) }
 
     // Variables for the dialog inputs
     var dialogIntensity by remember { mutableStateOf(1f) }
     var dialogZone by remember { mutableStateOf("") }
+
+
 
     Scaffold(
         topBar = {
@@ -64,48 +70,55 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
             )
         }
     ) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
-        ) {
-            item {
-                OutlinedTextField(
-                    value = name,
-                    onValueChange = setName,
-                    label = { Text("Nombre") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    shape = RoundedCornerShape(8.dp),
-                )
+        Box(modifier = Modifier.fillMaxSize()) {
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .padding(16.dp),
+            ) {
 
-                OutlinedTextField(
-                    value = surname,
-                    onValueChange = setSurname,
-                    label = { Text("Apellido") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    shape = RoundedCornerShape(8.dp)
-                )
+                Box(Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = name,
+                        onValueChange = setName,
+                        label = { Text("Nombre") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        shape = RoundedCornerShape(8.dp),
+                    )
+                }
 
-                OutlinedTextField(
-                    value = document,
-                    onValueChange = { newInput ->
-                        if (newInput.all { it.isDigit() }) {
-                            setDocument(newInput)
-                        }
-                    },
-                    label = { Text("Documento") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    shape = RoundedCornerShape(8.dp)
-                )
+                Box(Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = surname,
+                        onValueChange = setSurname,
+                        label = { Text("Apellido") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                }
 
-                Box {
+                Box(Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = document,
+                        onValueChange = { newInput ->
+                            if (newInput.all { it.isDigit() }) {
+                                setDocument(newInput)
+                            }
+                        },
+                        label = { Text("Documento") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                }
+
+                Box(Modifier.fillMaxWidth()) {
                     OutlinedTextField(
                         value = selectedProvince.province,
                         onValueChange = { /* Evitar modificaciones */ },
@@ -142,47 +155,51 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                     }
                 }
 
+                Box(Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = numberPhonePersonal,
+                        onValueChange = { newInput ->
+                            if (newInput.all { it.isDigit() }) {
+                                setNumberPhonePersonal(newInput)
+                            }
+                        },
+                        label = { Text("Teléfono personal") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                }
 
-                OutlinedTextField(
-                    value = numberPhonePersonal,
-                    onValueChange = { newInput ->
-                        if (newInput.all { it.isDigit() }) {
-                            setNumberPhonePersonal(newInput)
-                        }
-                    },
-                    label = { Text("Teléfono personal") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    shape = RoundedCornerShape(8.dp)
-                )
+                Box(Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = numberPhoneOther,
+                        onValueChange = { newInput ->
+                            if (newInput.all { it.isDigit() }) {
+                                setNumberPhoneOther(newInput)
+                            }
+                        },
+                        label = { Text("Teléfono alternativo") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                }
 
-                OutlinedTextField(
-                    value = numberPhoneOther,
-                    onValueChange = { newInput ->
-                        if (newInput.all { it.isDigit() }) {
-                            setNumberPhoneOther(newInput)
-                        }
-                    },
-                    label = { Text("Teléfono alternativo") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    shape = RoundedCornerShape(8.dp)
-                )
-
-
-                OutlinedTextField(
-                    value = observation,
-                    onValueChange = setObservation,
-                    label = { Text("Observaciones") },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    shape = RoundedCornerShape(8.dp)
-                )
+                Box(Modifier.fillMaxWidth()) {
+                    OutlinedTextField(
+                        value = observation,
+                        onValueChange = setObservation,
+                        label = { Text("Observaciones") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(bottom = 8.dp),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                }
 
                 Button(
                     onClick = { showDialog = true },
@@ -236,7 +253,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                                             intense = dialogIntensity.toInt(), // Converting intensity to Int
                                             date = System.currentTimeMillis()
                                         )
-                                        zonesDepilated = zonesDepilated + newZoneDepilate
+                                        zonesDepilated.add(newZoneDepilate)
                                         showDialog = false // Close the dialog
                                     },
                                     modifier = Modifier
@@ -251,8 +268,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 }
 
                 // Display list of zones to depilate
-                LazyColumn {
-                    items(zonesDepilated) { zoneDepilate ->
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    zonesDepilated.forEach { zoneDepilate ->
                         Text(
                             text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
                             Modifier.padding(bottom = 4.dp)
@@ -298,7 +315,9 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
 
         }
     }
+
 }
+
 
 val zones = listOf("BRAZO", "ESPALDA", "PIERNAS", "CARA", "CAVADO")
 
