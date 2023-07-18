@@ -23,6 +23,7 @@ import kotlinx.serialization.json.Json
 @Composable
 fun ClientsContent(clients: List<Client>, navController: NavHostController) {
     LazyColumn(
+        modifier = Modifier.fillMaxHeight(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {

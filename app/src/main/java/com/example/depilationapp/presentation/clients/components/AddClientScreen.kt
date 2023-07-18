@@ -73,7 +73,6 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
-                    .verticalScroll(rememberScrollState())
                     .padding(16.dp),
             ) {
 
@@ -209,6 +208,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                 ) {
                     Text("Añadir zona de depilación")
                 }
+
                 if (showDialog) {
                     Dialog(onDismissRequest = { showDialog = false }) {
                         Surface(shape = RoundedCornerShape(8.dp)) {
@@ -315,6 +315,8 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
 
         }
     }
+
+
 
 }
 

@@ -69,6 +69,7 @@ fun MyApp(useCases: UseCases) {
                 val json = Json { isLenient = true }
                 Log.d("MainActivity-Check", "jsonClient: $jsonClient")
                 val client = Json.decodeFromString<Client>(jsonClient)
+
                 DetailScreen(client = client, zonesViewModel)
             }
             composable(Screen.AddClientScreen.route) {
