@@ -81,8 +81,13 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                     is Response.Success<*> -> {
                         // Muestra las zonas recuperadas
                         val zones = (zonesResponse as Response.Success<List<ZoneDepilate>>).data
-                        zones.forEach { zone ->
-                            DetailItemZone(zone = zone.zone, intensity = zone.intense)
+                        val zoneNamesAndIntense = zones.flatMap { zone ->
+                            listOf(Pair(zone.zone, zone.intense))
+                        }.distinct()
+
+                        zoneNamesAndIntense.forEach { (zone, intense) ->
+
+                            DetailItemZone(zone = zone, intensity = intense)
                         }
                     }
                 }
