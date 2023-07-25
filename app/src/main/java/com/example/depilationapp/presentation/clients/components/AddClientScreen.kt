@@ -292,7 +292,6 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                                 numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
                                 state = false,
                                 observation = observation,
-                                listZoneRetoque = "",
                                 zoneDepilate = zonesDepilated.map { it.copy(clientId = clientId) }, // Update clientId in ZoneDepilate objects
 
                             )

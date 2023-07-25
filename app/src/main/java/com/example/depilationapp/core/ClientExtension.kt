@@ -33,7 +33,6 @@ fun mapToClient(data: Map<String, Any>): Client {
         numberPhoneOther = (data["numberPhoneOther"] as? Number)?.toLong() ?: 0,
         state = data["state"] as? Boolean ?: true,
         observation = data["observation"] as? String ?: "",
-        listZoneRetoque = listZoneRetoque,
         zoneDepilate = zoneDepilate,
     )
 }

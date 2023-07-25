@@ -53,7 +53,6 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                     value = client.numberPhoneOther?.toString() ?: ""
                 )
                 DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo")
-                DetailItem(title = "Zona de Retoque", value = client.listZoneRetoque ?: "")
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
