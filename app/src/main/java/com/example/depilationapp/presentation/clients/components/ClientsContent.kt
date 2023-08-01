@@ -8,7 +8,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.material.primarySurface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,6 +22,7 @@ import kotlinx.serialization.json.Json
 @Composable
 fun ClientsContent(clients: List<Client>, navController: NavHostController) {
     LazyColumn(
+        modifier = Modifier.fillMaxHeight(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -61,7 +61,7 @@ fun ClientCard(client: Client, onClick: () -> Unit) {
                     style = MaterialTheme.typography.subtitle1.copy(fontWeight = FontWeight.Bold),
                 )
                 Text(
-                    text = "De : ${client.province}",
+                    text = "De : ${client.localidad}",
                     style = MaterialTheme.typography.body2,
                 )
 
