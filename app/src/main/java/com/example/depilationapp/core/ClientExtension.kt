@@ -1,7 +1,7 @@
 package com.example.depilationapp.core
 
 import com.example.depilationapp.data.model.Client
-import com.example.depilationapp.data.model.Province
+import com.example.depilationapp.data.model.Localidad
 import com.example.depilationapp.data.model.ZoneDepilate
 
 fun mapToClient(data: Map<String, Any>): Client {
@@ -28,7 +28,7 @@ fun mapToClient(data: Map<String, Any>): Client {
         name = data["name"] as? String ?: "",
         surname = data["surname"] as? String ?: "",
         document = (data["document"] as? Number)?.toInt() ?: 0,
-        province = Province.safeValueOf(data["province"] as String),
+        localidad = Localidad.safeValueOf(data["province"] as String),
         numberPhonePersonal = (data["numberPhonePersonal"] as? Number)?.toLong() ?: 0,
         numberPhoneOther = (data["numberPhoneOther"] as? Number)?.toLong() ?: 0,
         state = data["state"] as? Boolean ?: true,

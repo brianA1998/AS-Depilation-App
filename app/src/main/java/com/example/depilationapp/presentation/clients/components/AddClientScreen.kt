@@ -1,11 +1,8 @@
 package com.example.depilationapp.presentation.clients.components
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -15,21 +12,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
-import androidx.compose.ui.input.nestedscroll.NestedScrollSource
-import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.Client
-import com.example.depilationapp.data.model.Province
-import com.example.depilationapp.data.model.Zone
+import com.example.depilationapp.data.model.Localidad
 import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.domain.use_case.UseCases
 import kotlinx.coroutines.launch
@@ -42,7 +32,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
     val (surname, setSurname) = remember { mutableStateOf("") }
     val (document, setDocument) = remember { mutableStateOf("") }
     var intensity by remember { mutableStateOf("") }
-    var selectedProvince by remember { mutableStateOf(Province.NONE) }
+    var selectedLocalidad by remember { mutableStateOf(Localidad.NONE) }
     var expanded by remember { mutableStateOf(false) }
     val (numberPhonePersonal, setNumberPhonePersonal) = remember { mutableStateOf("") }
     val (numberPhoneOther, setNumberPhoneOther) = remember { mutableStateOf("") }
@@ -119,9 +109,9 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
 
                 Box(Modifier.fillMaxWidth()) {
                     OutlinedTextField(
-                        value = selectedProvince.province,
+                        value = selectedLocalidad.province,
                         onValueChange = { /* Evitar modificaciones */ },
-                        label = { Text("Provincia") },
+                        label = { Text("Localidad") },
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(bottom = 8.dp)
@@ -143,9 +133,9 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                         expanded = expanded,
                         onDismissRequest = { expanded = false }
                     ) {
-                        Province.values().forEach { province ->
+                        Localidad.values().forEach { province ->
                             DropdownMenuItem(onClick = {
-                                selectedProvince = province
+                                selectedLocalidad = province
                                 expanded = false
                             }) {
                                 Text(province.province)
@@ -287,7 +277,7 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                                 name = name,
                                 surname = surname,
                                 document = document.toIntOrNull(),
-                                province = selectedProvince,
+                                localidad = selectedLocalidad,
                                 numberPhonePersonal = numberPhonePersonal.toLongOrNull() ?: 0,
                                 numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
                                 state = false,

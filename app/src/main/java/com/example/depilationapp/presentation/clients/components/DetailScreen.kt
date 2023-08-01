@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.util.Log
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,7 +42,7 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                 DetailItem(title = "Nombre", value = client.name)
                 DetailItem(title = "Apellido", value = client.surname)
                 DetailItem(title = "Documento", value = client.document?.toString() ?: "")
-                DetailItem(title = "Provincia", value = client.province?.province ?: "")
+                DetailItem(title = "Localidad", value = client.localidad?.province ?: "")
                 DetailItem(
                     title = "Teléfono personal",
                     value = client.numberPhonePersonal?.toString() ?: ""
