@@ -7,7 +7,7 @@ import androidx.compose.runtime.collectAsState
 
 @Composable
 fun HistoricZoneScreen(viewModel: ZonesViewModel, clientId: String) {
-    val groupedZones by viewModel.getGroupedZones(clientId).collectAsState(initial = emptyMap())
+    val groupedZones = viewModel.groupedZones
 
     //...
 }
