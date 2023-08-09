@@ -70,7 +70,7 @@ fun MyApp(useCases: UseCases) {
                 Log.d("MainActivity-Check", "jsonClient: $jsonClient")
                 val client = Json.decodeFromString<Client>(jsonClient)
 
-                DetailScreen(client = client, zonesViewModel)
+                DetailScreen(client = client, zonesViewModel, navController = navController)
             }
             composable(Screen.AddClientScreen.route) {
                 AddClientScreen(navController = navController, useCases = useCases)

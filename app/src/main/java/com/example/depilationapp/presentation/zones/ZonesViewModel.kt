@@ -35,7 +35,7 @@ class ZonesViewModel @Inject constructor(
         viewModelScope.launch {
             useCases.getZones(clientId).collect { zonesResponse ->
                 if (zonesResponse is Response.Success<*>) {
-                    val zones = zonesResponse.data as List<ZoneDepilate> // Asumiendo que `data` es de tipo `List<ZoneDepilate>`
+                    val zones = zonesResponse.data as List<ZoneDepilate>
                     val zonesWithDates = zones.map { zone ->
                         val calendar = Calendar.getInstance().apply {
                             timeInMillis = zone.date
