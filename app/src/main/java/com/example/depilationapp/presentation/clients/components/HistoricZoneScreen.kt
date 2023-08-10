@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.dp
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HistoricZoneScreen(viewModel: ZonesViewModel, clientId: String) {
+    viewModel.getGroupedZones(clientId)
     val groupedZones = viewModel.groupedZones.value
 
     Scaffold(
