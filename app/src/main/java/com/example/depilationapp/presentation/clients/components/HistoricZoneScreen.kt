@@ -16,6 +16,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import com.example.depilationapp.presentation.zones.ZonesViewModel
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -30,7 +31,9 @@ import androidx.compose.ui.unit.dp
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun HistoricZoneScreen(viewModel: ZonesViewModel, clientId: String) {
-    viewModel.getGroupedZones(clientId)
+    LaunchedEffect(clientId) {
+        viewModel.getGroupedZones(clientId)
+    }
     val groupedZones = viewModel.groupedZones.value
 
     Scaffold(

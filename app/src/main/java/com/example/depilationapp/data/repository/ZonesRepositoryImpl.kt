@@ -10,6 +10,8 @@ import com.google.firebase.firestore.CollectionReference
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -36,23 +38,14 @@ class ZonesRepositoryImpl @Inject constructor(
         awaitClose { subscription.remove() }
     }
 
-    override fun getZonesFromFirestoreByClient(clientId: String) = callbackFlow {
-        Log.e("clientId_field ", clientId)
-        val subscription = zonesRef.whereEqualTo("clientId", clientId)
-            .addSnapshotListener { snapshot, exception ->
-                if (exception != null) {
-                    trySend(Response.Failure(exception))
-                    return@addSnapshotListener
-                }
+    override fun getZonesFromFirestoreByClient(clientId: String) = flow {
 
-                val zones = snapshot?.documents?.map { document ->
-                    mapToZone(document.data as Map<String, Any>)
-                }?.toMutableList() ?: mutableListOf<ZoneDepilate>()
-
-                trySend(Response.Success(zones))
-            }
-
-        awaitClose { subscription.remove() }
+        val snapshot = zonesRef.whereEqualTo("clientId", clientId).get().await()
+        val zones = snapshot.documents.map { document ->
+            mapToZone(document.data as Map<String, Any>)
+        }
+        Log.d("ZonesRepository", "Fetched zones: $zones")
+        emit(Response.Success(zones))
     }
 
 

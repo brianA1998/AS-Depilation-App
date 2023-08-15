@@ -25,19 +25,23 @@ class ZonesViewModel @Inject constructor(
     val groupedZones = mutableStateOf<Map<Int, Map<Int, List<ZoneDepilate>>>>(emptyMap())
 
     fun getZones(clientId: String) = viewModelScope.launch {
-        useCases.getZones(clientId).collect { response ->
-            zonesResponse = response
+        if (zonesResponse is Loading) { // solo cargar si aún no se han cargado
+            useCases.getZones(clientId).collect { response ->
+                zonesResponse = response
+            }
         }
     }
 
     fun getGroupedZones(clientId: String) {
+        if (zonesResponse is Loading) getZones(clientId)
         viewModelScope.launch {
+            groupedZones.value = emptyMap()
             useCases.getZones(clientId).collect { zonesResponse ->
                 if (zonesResponse is Response.Success<*>) {
                     val zones = zonesResponse.data as List<ZoneDepilate>
                     val zonesWithDates = zones.map { zone ->
                         val timestamp = zone.date
-                        Log.d("ZonesViewModel", "Zone Date: $timestamp")
+
                         val calendar = Calendar.getInstance().apply {
                             timeInMillis = timestamp // Asegúrate de que esto esté en milisegundos
                         }
@@ -51,6 +55,7 @@ class ZonesViewModel @Inject constructor(
                         }
                     }
                     groupedZones.value = groupedZonesVal
+                    Log.d("ZonesViewModel", "groupedzones: ${groupedZones.value}")
                 }
             }
         }

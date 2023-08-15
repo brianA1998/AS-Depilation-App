@@ -19,10 +19,6 @@ fun mapToClient(data: Map<String, Any>): Client {
         )
     }
 
-
-    val listZoneRetoque = (data["listZoneRetoque"] as? String) ?: ""
-
-
     return Client(
         id = data["id"] as? String ?: "",
         name = data["name"] as? String ?: "",

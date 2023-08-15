@@ -12,6 +12,5 @@ fun mapToZone(data: Map<String, Any>): ZoneDepilate {
         date = data["date"] as? Long ?: 0L
     )
 
-    Log.d("mapToZone", "Converted data: $zone")
     return zone
 }
