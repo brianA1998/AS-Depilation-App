@@ -50,6 +50,13 @@ class ZonesRepositoryImpl @Inject constructor(
 
 
     override suspend fun saveZone(zone: ZoneDepilate) {
-        zonesRef.add(zone.toMap())
+        val zoneDocumentRef = if (zone.id.isEmpty()) {
+            zonesRef.document() // Crea una nueva ID de documento si la zona es nueva
+        } else {
+            zonesRef.document(zone.id) // Usa la ID de documento existente si la zona ya existe
+        }
+
+        zoneDocumentRef.set(zone.toMap()) // Guarda la zona en Firestore
     }
+
 }
