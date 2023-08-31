@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -26,9 +27,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.example.depilationapp.data.model.ZoneDepilate
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
 fun HistoricZoneScreen(viewModel: ZonesViewModel, clientId: String) {
     LaunchedEffect(clientId) {
@@ -45,17 +47,14 @@ fun HistoricZoneScreen(viewModel: ZonesViewModel, clientId: String) {
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.spacedBy(16.dp)
             ) {
                 groupedZones.forEach { (year, months) ->
                     ExpandableSection(title = "Año: $year") {
                         months.forEach { (month, zones) ->
                             ExpandableSection(title = "Mes: $month") {
                                 zones.forEach { zone ->
-                                    Text(
-                                        text = "Zona: ${zone.zone}, Intensidad: ${zone.intense}",
-                                        style = MaterialTheme.typography.body1
-                                    )
+                                    ZoneItem(zone = zone)
                                 }
                             }
                         }
@@ -64,6 +63,25 @@ fun HistoricZoneScreen(viewModel: ZonesViewModel, clientId: String) {
             }
         }
     )
+}
+
+@Composable
+fun ZoneItem(zone: ZoneDepilate) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(start = 8.dp)
+        ) {
+            Text(text = "Zona: ${zone.zone}", fontWeight = FontWeight.Bold)
+            Text(text = "Intensidad: ${zone.intense}", style = MaterialTheme.typography.body1)
+        }
+    }
 }
 
 @Composable
@@ -88,3 +106,4 @@ fun ExpandableSection(title: String, content: @Composable () -> Unit) {
         }
     }
 }
+
