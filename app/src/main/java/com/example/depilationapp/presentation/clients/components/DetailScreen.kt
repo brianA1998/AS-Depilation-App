@@ -22,7 +22,7 @@ import com.example.depilationapp.presentation.zones.ZonesViewModel
 @Composable
 fun DetailScreen(client: Client, viewModel: ZonesViewModel, navController : NavController) {
     viewModel.getZones(client.id)
-    val zonesResponse = viewModel.zonesResponse
+    val zonesResponse = viewModel.zonesResponse.value
     Log.d("zonasClient", "Client: $zonesResponse")
     Scaffold(
         topBar = {

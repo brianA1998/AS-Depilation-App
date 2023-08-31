@@ -1,7 +1,6 @@
 package com.example.depilationapp.data.repository
 
 import com.example.depilationapp.core.mapToClient
-import com.example.depilationapp.core.mapToZone
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.data.model.toMap
