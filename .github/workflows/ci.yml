@@ -4,7 +4,9 @@ on:
   push:
     branches: [ "feature/historic-zones" ]
   pull_request:
-    branches: [ "feature/historic-zones" ]
+    branches:
+        - "feature/historic-zones"
+        - "master"
 
 jobs:
   build:
