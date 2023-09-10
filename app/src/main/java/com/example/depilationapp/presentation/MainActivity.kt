@@ -7,27 +7,26 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Shapes
+import androidx.compose.runtime.Composable
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.depilationapp.data.model.Client
+import com.example.depilationapp.domain.use_case.UseCases
+import com.example.depilationapp.presentation.clients.ClientsViewModel
+import com.example.depilationapp.presentation.clients.components.AddClientScreen
 import com.example.depilationapp.presentation.clients.components.ClientsScreen
 import com.example.depilationapp.presentation.clients.components.DetailScreen
+import com.example.depilationapp.presentation.clients.components.HistoricZoneScreen
 import com.example.depilationapp.presentation.navigation.Screen
+import com.example.depilationapp.presentation.zones.ZonesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import darkThemeColors
 import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.json.Json
-import androidx.compose.material.Typography
-import androidx.compose.runtime.Composable
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.example.depilationapp.domain.use_case.UseCases
-import com.example.depilationapp.presentation.clients.ClientsViewModel
-import com.example.depilationapp.presentation.clients.components.AddClientScreen
-import com.example.depilationapp.presentation.zones.ZonesViewModel
 import lightThemeColors
 import javax.inject.Inject
 
@@ -70,10 +69,15 @@ fun MyApp(useCases: UseCases) {
                 Log.d("MainActivity-Check", "jsonClient: $jsonClient")
                 val client = Json.decodeFromString<Client>(jsonClient)
 
-                DetailScreen(client = client, zonesViewModel)
+                DetailScreen(client = client, zonesViewModel, navController = navController)
             }
             composable(Screen.AddClientScreen.route) {
                 AddClientScreen(navController = navController, useCases = useCases)
+            }
+
+            composable(Screen.HistoricZoneScreen.route, arguments = listOf(navArgument("clientId") { type = NavType.StringType })) { backStackEntry ->
+                val clientId = backStackEntry.arguments?.getString("clientId") ?: ""
+                HistoricZoneScreen(viewModel = zonesViewModel, clientId = clientId)
             }
 
         }

@@ -1,8 +1,8 @@
 package com.example.depilationapp.data.repository
 
 import com.example.depilationapp.core.mapToClient
-import com.example.depilationapp.core.mapToZone
 import com.example.depilationapp.data.model.Client
+import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.data.model.toMap
 import com.example.depilationapp.data.util.Response.Failure
 import com.example.depilationapp.data.util.Response.Success
@@ -19,7 +19,6 @@ class ClientsRepositoryImpl @Inject constructor(
     private val zonesRef: CollectionReference,
 ) : ClientsRepository {
 
-
     override fun getClientsFromFirestore() = callbackFlow {
         val subscription = clientsRef.addSnapshotListener { snapshot, exception ->
             if (exception != null) {
@@ -28,16 +27,7 @@ class ClientsRepositoryImpl @Inject constructor(
             }
 
             val clients = snapshot?.documents?.mapNotNull { document ->
-                val client = mapToClient(document.data as Map<String, Any>)
-                val zoneDepilateSubscription = zonesRef
-                    .whereEqualTo("clientId", client.id)
-                    .get()
-                    .addOnSuccessListener { zonesSnapshot ->
-                        client.zoneDepilate = zonesSnapshot.documents.mapNotNull { zoneDocument ->
-                            mapToZone(zoneDocument.data as Map<String, Any>)
-                        }
-                    }
-                client
+                mapToClient(document.data as Map<String, Any>)
             }?.toMutableList() ?: mutableListOf()
 
             trySend(Success(clients))
@@ -46,8 +36,7 @@ class ClientsRepositoryImpl @Inject constructor(
         awaitClose { subscription.remove() }
     }
 
-    override suspend fun saveClient(client: Client) {
-
+    override suspend fun saveClient(client: Client, zones: List<ZoneDepilate>) {
         val clientDocumentRef = clientsRef.document()
 
         if (client.id == "a123") {
@@ -55,15 +44,15 @@ class ClientsRepositoryImpl @Inject constructor(
         }
         clientDocumentRef.set(client.toMap())
 
-
-        client.zoneDepilate.forEach { zoneDepilate ->
+        zones.forEach { zoneDepilate ->
             zoneDepilate.clientId = client.id // Actualizamos el clientId para cada zonaDepilate
-            val zoneDocumentRef = zonesRef.document() // crea una referencia a un nuevo documento
-
-            if (zoneDepilate.id.isEmpty()) {
-                zoneDepilate.id = zoneDocumentRef.id // asigna la id del documento a la zona
+            val zoneDocumentRef = if (zoneDepilate.id.isEmpty()) {
+                zonesRef.document() // crea una referencia a un nuevo documento si la id de la zona está vacía
+            } else {
+                zonesRef.document(zoneDepilate.id) // usa la referencia al documento existente si la id de la zona no está vacía
             }
 
+            zoneDepilate.id = zoneDocumentRef.id // asigna la id del documento a la zona
             zoneDocumentRef.set(zoneDepilate.toMap()) // guarda la zona en Firestore
         }
     }

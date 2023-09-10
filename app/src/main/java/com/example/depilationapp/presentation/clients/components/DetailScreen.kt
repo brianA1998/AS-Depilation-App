@@ -10,17 +10,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.data.util.*
+import com.example.depilationapp.presentation.navigation.Screen
 import com.example.depilationapp.presentation.zones.ZonesViewModel
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
+fun DetailScreen(client: Client, viewModel: ZonesViewModel, navController : NavController) {
     viewModel.getZones(client.id)
-    val zonesResponse = viewModel.zonesResponse
+    val zonesResponse = viewModel.zonesResponse.value
     Log.d("zonasClient", "Client: $zonesResponse")
     Scaffold(
         topBar = {
@@ -91,6 +93,16 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel) {
                 }
 
                 DetailItem(title = "Observaciones", value = client.observation)
+
+
+                Button(
+                    onClick = {
+                        val route = Screen.HistoricZoneScreen.createRoute(client.id)
+                        navController.navigate(route)
+                    }
+                ) {
+                    Text(text = "Ver histórico de zonas")
+                }
             }
         }
     )

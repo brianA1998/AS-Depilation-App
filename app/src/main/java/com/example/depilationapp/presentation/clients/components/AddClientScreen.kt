@@ -282,15 +282,16 @@ fun AddClientScreen(navController: NavHostController, useCases: UseCases) {
                                 numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
                                 state = false,
                                 observation = observation,
-                                zoneDepilate = zonesDepilated.map { it.copy(clientId = clientId) }, // Update clientId in ZoneDepilate objects
-
                             )
 
-                            useCases.saveClient(client)
-
+                            // Actualiza los objetos ZoneDepilate con la ID correcta del cliente
                             zonesDepilated.forEach { zoneDepilate ->
-                                useCases.saveZone(zoneDepilate.copy(clientId = clientId)) // Update clientId in ZoneDepilate objects
+                                zoneDepilate.clientId = clientId
                             }
+
+                            // Pasa el cliente y la lista de zonas depiladas al método saveClient
+                            useCases.saveClient(client, zonesDepilated)
+
                             navController.navigate("clients")
                         }
                     },

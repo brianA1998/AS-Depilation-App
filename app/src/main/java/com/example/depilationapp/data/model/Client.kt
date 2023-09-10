@@ -14,17 +14,10 @@ data class Client(
     var numberPhonePersonal: Long = 0,
     var numberPhoneOther: Long = 0,
     var state: Boolean = false,
-    var observation: String = "",
-    @Contextual var zoneDepilate: List<ZoneDepilate> = listOf(),
+    var observation: String = ""
 )
 
 fun Client.toMap(): Map<String, Any> {
-    val zoneDepilateList = this.zoneDepilate?.map { zone ->
-        mapOf(
-            "name" to zone.zone, "intensity" to zone.intense
-        )
-    } ?: listOf<Map<String, Any>>()
-
     return mapOf(
         "id" to id,
         "name" to name,
@@ -34,7 +27,7 @@ fun Client.toMap(): Map<String, Any> {
         "numberPhonePersonal" to numberPhonePersonal,
         "numberPhoneOther" to numberPhoneOther,
         "state" to state,
-        "observation" to observation,
-        "zoneDepilate" to zoneDepilateList
+        "observation" to observation
     )
 }
+
