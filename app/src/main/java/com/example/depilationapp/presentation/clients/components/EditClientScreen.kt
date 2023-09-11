@@ -48,7 +48,7 @@ import java.util.UUID
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditClientScreen(navController: NavHostController, useCases: UseCases) {
+fun EditClientScreen(navController: NavHostController, useCases: UseCases, client: Client) {
     val (name, setName) = remember { mutableStateOf("") }
     val (surname, setSurname) = remember { mutableStateOf("") }
     val (document, setDocument) = remember { mutableStateOf("") }
@@ -72,7 +72,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Agregar un nuevo cliente") },
+                title = { Text("Editar datos de cliente") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(Icons.Filled.ArrowBack, contentDescription = " Atrás")
@@ -320,7 +320,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases) {
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                 ) {
-                    Text("Guardar cliente")
+                    Text("Guardar cambios")
                 }
             }
 

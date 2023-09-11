@@ -16,6 +16,7 @@ import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.data.util.*
 import com.example.depilationapp.presentation.navigation.Screen
 import com.example.depilationapp.presentation.zones.ZonesViewModel
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 
@@ -111,7 +112,10 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel, navController : NavC
                     onClick = {
                         val route = Screen.HistoricZoneScreen.createRoute(client.id)
                         navController.navigate(route)
-                    }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
                 ) {
                     Text(text = "Ver histórico de zonas")
                 }

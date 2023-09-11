@@ -88,7 +88,7 @@ fun MyApp(useCases: UseCases) {
 
             composable(Screen.HistoricZoneScreen.route, arguments = listOf(navArgument("clientId") { type = NavType.StringType })) { backStackEntry ->
                 val clientId = backStackEntry.arguments?.getString("clientId") ?: ""
-                HistoricZoneScreen(viewModel = zonesViewModel, clientId = clientId)
+                HistoricZoneScreen(navController = navController,viewModel = zonesViewModel, clientId = clientId)
             }
 
         }

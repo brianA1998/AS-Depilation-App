@@ -9,11 +9,13 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Icon
+import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.runtime.Composable
@@ -27,12 +29,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.ZoneDepilate
 
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
-fun HistoricZoneScreen(viewModel: ZonesViewModel, clientId: String) {
+fun HistoricZoneScreen(navController: NavHostController, viewModel: ZonesViewModel, clientId: String) {
     LaunchedEffect(clientId) {
         viewModel.getGroupedZones(clientId)
     }
@@ -40,7 +43,11 @@ fun HistoricZoneScreen(viewModel: ZonesViewModel, clientId: String) {
 
     Scaffold(
         topBar = {
-            TopAppBar(title = { Text(text = "Historial de Zonas") })
+            TopAppBar(title = { Text(text = "Historial de Zonas") },               navigationIcon = {
+                IconButton(onClick = { navController.popBackStack() }) {
+                    Icon(Icons.Filled.ArrowBack, contentDescription = " Atrás")
+                }
+            })
         },
         content = {
             Column(
