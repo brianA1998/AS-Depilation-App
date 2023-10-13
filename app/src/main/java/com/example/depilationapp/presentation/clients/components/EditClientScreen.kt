@@ -1,6 +1,7 @@
 package com.example.depilationapp.presentation.clients.components
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -49,15 +50,15 @@ import java.util.UUID
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun EditClientScreen(navController: NavHostController, useCases: UseCases, client: Client) {
-    val (name, setName) = remember { mutableStateOf("") }
-    val (surname, setSurname) = remember { mutableStateOf("") }
-    val (document, setDocument) = remember { mutableStateOf("") }
+    val (name, setName) = remember { mutableStateOf(client.name) }
+    val (surname, setSurname) = remember { mutableStateOf(client.surname) }
+    val (document, setDocument) = remember { mutableStateOf(client.document.toString()) }
     var intensity by remember { mutableStateOf("") }
-    var selectedLocalidad by remember { mutableStateOf(Localidad.NONE) }
+    var selectedLocalidad by remember { mutableStateOf(client.localidad) }
     var expanded by remember { mutableStateOf(false) }
-    val (numberPhonePersonal, setNumberPhonePersonal) = remember { mutableStateOf("") }
-    val (numberPhoneOther, setNumberPhoneOther) = remember { mutableStateOf("") }
-    val (observation, setObservation) = remember { mutableStateOf("") }
+    val (numberPhonePersonal, setNumberPhonePersonal) = remember { mutableStateOf(client.numberPhonePersonal.toString()) }
+    val (numberPhoneOther, setNumberPhoneOther) = remember { mutableStateOf(client.numberPhoneOther.toString()) }
+    val (observation, setObservation) = remember { mutableStateOf(client.observation) }
     val (zone, setZone) = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     var zonesDepilated = remember { mutableStateListOf<ZoneDepilate>() }
@@ -67,7 +68,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
     var dialogIntensity by remember { mutableStateOf(1f) }
     var dialogZone by remember { mutableStateOf("") }
 
-
+    Log.d("EditClientScreen", "Client: $client")
 
     Scaffold(
         topBar = {
@@ -130,7 +131,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
 
                 Box(Modifier.fillMaxWidth()) {
                     OutlinedTextField(
-                        value = selectedLocalidad.province,
+                        value = selectedLocalidad?.province.orEmpty(),
                         onValueChange = { /* Evitar modificaciones */ },
                         label = { Text("Localidad") },
                         modifier = Modifier
@@ -184,7 +185,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
 
                 Box(Modifier.fillMaxWidth()) {
                     OutlinedTextField(
-                        value = numberPhoneOther,
+                        value = numberPhoneOther.toString(),
                         onValueChange = { newInput ->
                             if (newInput.all { it.isDigit() }) {
                                 setNumberPhoneOther(newInput)
@@ -292,12 +293,12 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                 Button(
                     onClick = {
                         coroutineScope.launch {
-                            val clientId = UUID.randomUUID().toString()
+
                             val client = Client(
-                                id = clientId,
+                                id = client.id,
                                 name = name,
                                 surname = surname,
-                                document = document.toIntOrNull(),
+                                document = document.toIntOrNull() ?: 0,
                                 localidad = selectedLocalidad,
                                 numberPhonePersonal = numberPhonePersonal.toLongOrNull() ?: 0,
                                 numberPhoneOther = numberPhoneOther.toLongOrNull() ?: 0,
@@ -307,7 +308,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
 
                             // Actualiza los objetos ZoneDepilate con la ID correcta del cliente
                             zonesDepilated.forEach { zoneDepilate ->
-                                zoneDepilate.clientId = clientId
+                                zoneDepilate.clientId = client.id
                             }
 
                             // Pasa el cliente y la lista de zonas depiladas al método saveClient
