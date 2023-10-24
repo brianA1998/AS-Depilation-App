@@ -49,12 +49,13 @@ import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.Localidad
 import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.domain.use_case.UseCases
+import com.example.depilationapp.presentation.zones.ZonesViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun EditClientScreen(navController: NavHostController, useCases: UseCases, client: Client) {
+fun EditClientScreen(navController: NavHostController, useCases: UseCases, client: Client,viewModel : ZonesViewModel) {
     val (name, setName) = remember { mutableStateOf(client.name) }
     val (surname, setSurname) = remember { mutableStateOf(client.surname) }
     val (document, setDocument) = remember { mutableStateOf(client.document.toString()) }
@@ -75,6 +76,10 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
     var dialogZone by remember { mutableStateOf("") }
 
 
+    LaunchedEffect(client.id){
+        viewModel.getGroupedZones(client.id)
+    }
+    val groupedZones = viewModel.groupedZones.value
 
 
 
@@ -223,6 +228,19 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                     )
                 }
 
+
+                // Display list of zones to depilate
+                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                    groupedZones.forEach { _ ->
+                        zones.forEach {
+                            Text(
+                                text = it,
+                                Modifier.padding(bottom = 4.dp)
+                            )
+                        }
+                    }
+                }
+
                 Button(
                     onClick = { showDialog = true },
                     modifier = Modifier
@@ -292,6 +310,16 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                     Text("Guardar zona de depilación")
                                 }
 
+                                // Display list of zones to depilate
+                                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
+                                    groupedZones.forEach { zones ->
+                                        Text(
+                                            text = "${zones.value}",
+                                            Modifier.padding(bottom = 4.dp)
+                                        )
+                                    }
+                                }
+
 // Agregar el Text de error
                                 if (errorText.isNotEmpty()) {
                                     Text(
@@ -306,15 +334,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                     }
                 }
 
-                // Display list of zones to depilate
-                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    zonesDepilated.forEach { zoneDepilate ->
-                        Text(
-                            text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
-                            Modifier.padding(bottom = 4.dp)
-                        )
-                    }
-                }
 
 
                 Button(

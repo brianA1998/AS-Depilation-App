@@ -83,7 +83,7 @@ fun MyApp(useCases: UseCases) {
                 Log.d("MainActivity-Check", "jsonClient: $jsonClient")
                 val client = Json.decodeFromString<Client>(jsonClient)
 
-                EditClientScreen(navController = navController, useCases = useCases, client = client)
+                EditClientScreen(navController = navController, useCases = useCases, client = client,viewModel = zonesViewModel)
             }
 
             composable(Screen.HistoricZoneScreen.route, arguments = listOf(navArgument("clientId") { type = NavType.StringType })) { backStackEntry ->
