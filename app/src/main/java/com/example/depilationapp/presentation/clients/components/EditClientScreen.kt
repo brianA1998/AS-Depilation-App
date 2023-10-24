@@ -2,6 +2,7 @@ package com.example.depilationapp.presentation.clients.components
 
 import android.annotation.SuppressLint
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
@@ -36,9 +38,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.Localidad
@@ -62,13 +67,19 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
     val (zone, setZone) = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     var zonesDepilated = remember { mutableStateListOf<ZoneDepilate>() }
+    var errorText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
 
     // Variables for the dialog inputs
     var dialogIntensity by remember { mutableStateOf(1f) }
     var dialogZone by remember { mutableStateOf("") }
 
-    Log.d("EditClientScreen", "Client: $client")
+
+
+
+
+
+
 
     Scaffold(
         topBar = {
@@ -258,15 +269,21 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                 )
                                 Button(
                                     onClick = {
-                                        val newZoneDepilate = ZoneDepilate(
-                                            id = UUID.randomUUID().toString(),
-                                            clientId = "", // We'll set this later when creating the client
-                                            zone = dialogZone,
-                                            intense = dialogIntensity.toInt(), // Converting intensity to Int
-                                            date = System.currentTimeMillis()
-                                        )
-                                        zonesDepilated.add(newZoneDepilate)
-                                        showDialog = false // Close the dialog
+                                        //Log.w("zonesDepilated values :",zonesDepilated.forEach { it }.toString())
+                                        //Log.w("dialogZone values :",dialogZone)
+                                        if (zonesDepilated.any { it.zone == dialogZone }) {
+                                            errorText = "No se pueden agregar 2 veces la misma zona"
+                                        } else {
+                                            val newZoneDepilate = ZoneDepilate(
+                                                id = UUID.randomUUID().toString(),
+                                                clientId = "", // Establecerás esto más tarde al crear el cliente
+                                                zone = dialogZone,
+                                                intense = dialogIntensity.toInt(),
+                                                date = System.currentTimeMillis()
+                                            )
+                                            zonesDepilated.add(newZoneDepilate)
+                                            showDialog = false
+                                        }
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -274,6 +291,16 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                 ) {
                                     Text("Guardar zona de depilación")
                                 }
+
+// Agregar el Text de error
+                                if (errorText.isNotEmpty()) {
+                                    Text(
+                                        text = errorText,
+                                        color = Color.Red,
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                }
+
                             }
                         }
                     }
