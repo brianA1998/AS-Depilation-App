@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -53,7 +54,7 @@ import com.example.depilationapp.presentation.zones.ZonesViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
 fun EditClientScreen(navController: NavHostController, useCases: UseCases, client: Client,viewModel : ZonesViewModel) {
     val (name, setName) = remember { mutableStateOf(client.name) }
@@ -71,6 +72,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
     var errorText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
 
+
     // Variables for the dialog inputs
     var dialogIntensity by remember { mutableStateOf(1f) }
     var dialogZone by remember { mutableStateOf("") }
@@ -80,11 +82,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
         viewModel.getGroupedZones(client.id)
     }
     val groupedZones = viewModel.groupedZones.value
-
-
-
-
-
 
     Scaffold(
         topBar = {
@@ -228,16 +225,23 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                     )
                 }
 
-
+                groupedZones.forEach { (year, monthsMap) ->
+                    // Itera sobre el segundo nivel de Map (Mes)
+                    monthsMap.forEach { (month, zonesList) ->
+                        // Itera sobre la lista de ZoneDepilate
+                        zonesList.forEach { zoneDepilate ->
+                            // Luego, puedes usar zoneDepilate para mostrar los datos
+                            ZoneItemEdit(zoneDepilate)
+                        }
+                    }
+                }
                 // Display list of zones to depilate
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    groupedZones.forEach { _ ->
-                        zones.forEach {
-                            Text(
-                                text = it,
-                                Modifier.padding(bottom = 4.dp)
-                            )
-                        }
+                    zonesDepilated.forEach { zoneDepilate ->
+                        Text(
+                            text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
+                            Modifier.padding(bottom = 4.dp)
+                        )
                     }
                 }
 
@@ -287,8 +291,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                 )
                                 Button(
                                     onClick = {
-                                        //Log.w("zonesDepilated values :",zonesDepilated.forEach { it }.toString())
-                                        //Log.w("dialogZone values :",dialogZone)
                                         if (zonesDepilated.any { it.zone == dialogZone }) {
                                             errorText = "No se pueden agregar 2 veces la misma zona"
                                         } else {
@@ -310,17 +312,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                     Text("Guardar zona de depilación")
                                 }
 
-                                // Display list of zones to depilate
-                                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                                    groupedZones.forEach { zones ->
-                                        Text(
-                                            text = "${zones.value}",
-                                            Modifier.padding(bottom = 4.dp)
-                                        )
-                                    }
-                                }
-
-// Agregar el Text de error
                                 if (errorText.isNotEmpty()) {
                                     Text(
                                         text = errorText,
@@ -333,6 +324,8 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                         }
                     }
                 }
+
+
 
 
 
@@ -372,6 +365,20 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
             }
 
         }
+    }
+}
+
+@Composable
+fun ZoneItemEdit(zoneDepilate: ZoneDepilate) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .verticalScroll(rememberScrollState())
+    ) {
+        Text(
+            text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
+        )
     }
 }
 
