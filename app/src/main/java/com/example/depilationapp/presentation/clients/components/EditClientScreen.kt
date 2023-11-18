@@ -2,7 +2,6 @@ package com.example.depilationapp.presentation.clients.components
 
 import android.annotation.SuppressLint
 import android.util.Log
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,13 +37,9 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.Localidad
@@ -60,28 +55,31 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
     val (name, setName) = remember { mutableStateOf(client.name) }
     val (surname, setSurname) = remember { mutableStateOf(client.surname) }
     val (document, setDocument) = remember { mutableStateOf(client.document.toString()) }
-    var intensity by remember { mutableStateOf("") }
     var selectedLocalidad by remember { mutableStateOf(client.localidad) }
     var expanded by remember { mutableStateOf(false) }
     val (numberPhonePersonal, setNumberPhonePersonal) = remember { mutableStateOf(client.numberPhonePersonal.toString()) }
     val (numberPhoneOther, setNumberPhoneOther) = remember { mutableStateOf(client.numberPhoneOther.toString()) }
     val (observation, setObservation) = remember { mutableStateOf(client.observation) }
-    val (zone, setZone) = remember { mutableStateOf("") }
     val coroutineScope = rememberCoroutineScope()
     var zonesDepilated = remember { mutableStateListOf<ZoneDepilate>() }
-    var errorText by remember { mutableStateOf("") }
     var showDialog by remember { mutableStateOf(false) }
+
 
 
     // Variables for the dialog inputs
     var dialogIntensity by remember { mutableStateOf(1f) }
     var dialogZone by remember { mutableStateOf("") }
+    val zonesEdit = listOf("BRAZO", "ESPALDA", "PIERNAS", "CARA", "CAVADO")
 
 
     LaunchedEffect(client.id){
         viewModel.getGroupedZones(client.id)
     }
     val groupedZones = viewModel.groupedZones.value
+
+    groupedZones.forEach { zones ->
+        Log.w("GROUPEDZONES VALUES:",zones.value.toString())
+    }
 
     Scaffold(
         topBar = {
@@ -98,7 +96,9 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
-                    .padding(16.dp),
+                    .fillMaxSize()
+                    .padding(16.dp)
+
             ) {
 
                 Box(Modifier.fillMaxWidth()) {
@@ -225,16 +225,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                     )
                 }
 
-                groupedZones.forEach { (year, monthsMap) ->
-                    // Itera sobre el segundo nivel de Map (Mes)
-                    monthsMap.forEach { (month, zonesList) ->
-                        // Itera sobre la lista de ZoneDepilate
-                        zonesList.forEach { zoneDepilate ->
-                            // Luego, puedes usar zoneDepilate para mostrar los datos
-                            ZoneItemEdit(zoneDepilate)
-                        }
-                    }
-                }
                 // Display list of zones to depilate
                 Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
                     zonesDepilated.forEach { zoneDepilate ->
@@ -244,6 +234,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                         )
                     }
                 }
+
 
                 Button(
                     onClick = { showDialog = true },
@@ -267,7 +258,15 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                     style = MaterialTheme.typography.h6,
                                     modifier = Modifier.padding(bottom = 8.dp)
                                 )
-                                ZoneDropdownEdit(dialogZone) { newZone -> dialogZone = newZone }
+
+                                // Filtra las zonas disponibles para agregar
+                                val availableZones = zonesEdit.filter { zoneEdit ->
+                                    !groupedZones
+                                        .flatMap { it.value.values }
+                                        .flatten()
+                                        .any { it.zone == zoneEdit }
+                                }
+                                ZoneDropdownEdit(dialogZone,availableZones) { newZone -> dialogZone = newZone }
                                 Text(
                                     "Intensidad de depilación",
                                     style = MaterialTheme.typography.subtitle1,
@@ -291,19 +290,15 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                 )
                                 Button(
                                     onClick = {
-                                        if (zonesDepilated.any { it.zone == dialogZone }) {
-                                            errorText = "No se pueden agregar 2 veces la misma zona"
-                                        } else {
-                                            val newZoneDepilate = ZoneDepilate(
-                                                id = UUID.randomUUID().toString(),
-                                                clientId = "", // Establecerás esto más tarde al crear el cliente
-                                                zone = dialogZone,
-                                                intense = dialogIntensity.toInt(),
-                                                date = System.currentTimeMillis()
-                                            )
-                                            zonesDepilated.add(newZoneDepilate)
-                                            showDialog = false
-                                        }
+                                        val newZoneDepilate = ZoneDepilate(
+                                            id = UUID.randomUUID().toString(),
+                                            clientId = "", // Establecerás esto más tarde al crear el cliente
+                                            zone = dialogZone,
+                                            intense = dialogIntensity.toInt(),
+                                            date = System.currentTimeMillis()
+                                        )
+                                        zonesDepilated.add(newZoneDepilate)
+                                        showDialog = false
                                     },
                                     modifier = Modifier
                                         .fillMaxWidth()
@@ -311,15 +306,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                 ) {
                                     Text("Guardar zona de depilación")
                                 }
-
-                                if (errorText.isNotEmpty()) {
-                                    Text(
-                                        text = errorText,
-                                        color = Color.Red,
-                                        modifier = Modifier.padding(top = 4.dp)
-                                    )
-                                }
-
                             }
                         }
                     }
@@ -369,28 +355,12 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
 }
 
 @Composable
-fun ZoneItemEdit(zoneDepilate: ZoneDepilate) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Text(
-            text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
-        )
-    }
-}
-
-val zonesEdit = listOf("BRAZO", "ESPALDA", "PIERNAS", "CARA", "CAVADO")
-
-@Composable
-fun ZoneDropdownEdit(zone: String, setZone: (String) -> Unit) {
+fun ZoneDropdownEdit(selectedZone: String, availableZones: List<String>, setZone: (String) -> Unit) {
     val expanded = remember { mutableStateOf(false) }
 
     Box {
         OutlinedTextField(
-            value = zone,
+            value = selectedZone,
             onValueChange = { },
             label = { Text("Zona") },
             readOnly = true,
@@ -411,7 +381,7 @@ fun ZoneDropdownEdit(zone: String, setZone: (String) -> Unit) {
             onDismissRequest = { expanded.value = false },
             modifier = Modifier.fillMaxWidth()
         ) {
-            zonesEdit.forEach { zoneItem ->
+            availableZones.forEach { zoneItem ->
                 DropdownMenuItem(onClick = {
                     setZone(zoneItem)
                     expanded.value = false
