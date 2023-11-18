@@ -1,5 +1,6 @@
 package com.example.depilationapp.data.repository
 
+import android.util.Log
 import com.example.depilationapp.core.mapToClient
 import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.ZoneDepilate
@@ -37,23 +38,34 @@ class ClientsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun saveClient(client: Client, zones: List<ZoneDepilate>) {
-        val clientDocumentRef = clientsRef.document()
-
-        if (client.id == "a123") {
-            client.id = clientDocumentRef.id
+        Log.d("id client", client.id)
+        val clientDocumentRef = if (client.id.isEmpty()) {
+            clientsRef.document()
+        } else {
+            clientsRef.document(client.id)
         }
+
+        if (client.id.isEmpty()) {
+            client.id =
+                clientDocumentRef.id
+        }
+
         clientDocumentRef.set(client.toMap())
 
         zones.forEach { zoneDepilate ->
-            zoneDepilate.clientId = client.id // Actualizamos el clientId para cada zonaDepilate
+            zoneDepilate.clientId = client.id
             val zoneDocumentRef = if (zoneDepilate.id.isEmpty()) {
-                zonesRef.document() // crea una referencia a un nuevo documento si la id de la zona está vacía
+                zonesRef.document()
             } else {
-                zonesRef.document(zoneDepilate.id) // usa la referencia al documento existente si la id de la zona no está vacía
+                zonesRef.document(zoneDepilate.id)
             }
 
-            zoneDepilate.id = zoneDocumentRef.id // asigna la id del documento a la zona
-            zoneDocumentRef.set(zoneDepilate.toMap()) // guarda la zona en Firestore
+            if (zoneDepilate.id.isEmpty()) {
+                zoneDepilate.id =
+                    zoneDocumentRef.id
+            }
+
+            zoneDocumentRef.set(zoneDepilate.toMap())
         }
     }
 }

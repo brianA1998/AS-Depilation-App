@@ -20,6 +20,7 @@ import com.example.depilationapp.presentation.clients.ClientsViewModel
 import com.example.depilationapp.presentation.clients.components.AddClientScreen
 import com.example.depilationapp.presentation.clients.components.ClientsScreen
 import com.example.depilationapp.presentation.clients.components.DetailScreen
+import com.example.depilationapp.presentation.clients.components.EditClientScreen
 import com.example.depilationapp.presentation.clients.components.HistoricZoneScreen
 import com.example.depilationapp.presentation.navigation.Screen
 import com.example.depilationapp.presentation.zones.ZonesViewModel
@@ -74,10 +75,20 @@ fun MyApp(useCases: UseCases) {
             composable(Screen.AddClientScreen.route) {
                 AddClientScreen(navController = navController, useCases = useCases)
             }
+            composable(Screen.EditClientScreen.route, arguments = listOf(navArgument("client") {
+                type = NavType.StringType
+            })) { backStackEntry ->
+                val jsonClient = Uri.decode(backStackEntry.arguments?.getString("client"))
+                val json = Json { isLenient = true }
+                Log.d("MainActivity-Check", "jsonClient: $jsonClient")
+                val client = Json.decodeFromString<Client>(jsonClient)
+
+                EditClientScreen(navController = navController, useCases = useCases, client = client,viewModel = zonesViewModel)
+            }
 
             composable(Screen.HistoricZoneScreen.route, arguments = listOf(navArgument("clientId") { type = NavType.StringType })) { backStackEntry ->
                 val clientId = backStackEntry.arguments?.getString("clientId") ?: ""
-                HistoricZoneScreen(viewModel = zonesViewModel, clientId = clientId)
+                HistoricZoneScreen(navController = navController,viewModel = zonesViewModel, clientId = clientId)
             }
 
         }

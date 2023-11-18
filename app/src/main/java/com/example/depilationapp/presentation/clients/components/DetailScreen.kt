@@ -16,14 +16,16 @@ import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.data.util.*
 import com.example.depilationapp.presentation.navigation.Screen
 import com.example.depilationapp.presentation.zones.ZonesViewModel
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
 fun DetailScreen(client: Client, viewModel: ZonesViewModel, navController : NavController) {
     viewModel.getZones(client.id)
     val zonesResponse = viewModel.zonesResponse.value
-    Log.d("zonasClient", "Client: $zonesResponse")
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -94,12 +96,26 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel, navController : NavC
 
                 DetailItem(title = "Observaciones", value = client.observation)
 
+                Button(
+                    onClick = {
+                        val jsonClient = Json.encodeToString(client) // Serializar el cliente a JSON
+                        navController.navigate(Screen.EditClientScreen.createRoute(jsonClient))
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    Text("Editar datos del cliente")
+                }
 
                 Button(
                     onClick = {
                         val route = Screen.HistoricZoneScreen.createRoute(client.id)
                         navController.navigate(route)
-                    }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
                 ) {
                     Text(text = "Ver histórico de zonas")
                 }
