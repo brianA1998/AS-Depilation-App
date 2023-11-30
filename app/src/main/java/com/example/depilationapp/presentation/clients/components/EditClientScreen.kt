@@ -2,17 +2,20 @@ package com.example.depilationapp.presentation.clients.components
 
 import android.annotation.SuppressLint
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.Icon
@@ -36,7 +39,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
@@ -48,6 +53,8 @@ import com.example.depilationapp.domain.use_case.UseCases
 import com.example.depilationapp.presentation.zones.ZonesViewModel
 import kotlinx.coroutines.launch
 import java.util.UUID
+
+
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
 @Composable
@@ -63,6 +70,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
     val coroutineScope = rememberCoroutineScope()
     var zonesDepilated = remember { mutableStateListOf<ZoneDepilate>() }
     var showDialog by remember { mutableStateOf(false) }
+    var showUpdateIntensitiesScreen by remember { mutableStateOf(false) }
 
 
 
@@ -98,7 +106,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
-
             ) {
 
                 Box(Modifier.fillMaxWidth()) {
@@ -245,6 +252,29 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                     Text("Añadir zona de depilación")
                 }
 
+                Button(
+                    onClick = { showUpdateIntensitiesScreen = true },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Yellow),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 8.dp)// Color del tema primario
+                        .height(50.dp) // Altura personalizada
+                        .clip(RoundedCornerShape(8.dp)) // Bordes redondeados
+                ) {
+                    Text("Actualizar Intensidades")
+                }
+
+
+                // Agrega un nuevo Composable para la pantalla de actualizar intensidades
+                /**
+                if (showUpdateIntensitiesScreen) {
+                    UpdateIntensitiesScreen(
+                        onDismiss = { showUpdateIntensitiesScreen = false },
+                        // Pasa los parámetros necesarios aquí
+                    )
+                }
+                **/
+
                 if (showDialog) {
                     Dialog(onDismissRequest = { showDialog = false }) {
                         Surface(shape = RoundedCornerShape(8.dp)) {
@@ -292,7 +322,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                                     onClick = {
                                         val newZoneDepilate = ZoneDepilate(
                                             id = UUID.randomUUID().toString(),
-                                            clientId = "", // Establecerás esto más tarde al crear el cliente
+                                            clientId = "",
                                             zone = dialogZone,
                                             intense = dialogIntensity.toInt(),
                                             date = System.currentTimeMillis()
@@ -310,9 +340,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                         }
                     }
                 }
-
-
-
 
 
                 Button(
@@ -345,6 +372,9 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
+                        //.background(MaterialTheme.colorScheme.secondary) // Color del tema secundario
+                        .height(60.dp) // Altura personalizada
+                        .clip(RoundedCornerShape(12.dp))
                 ) {
                     Text("Guardar cambios")
                 }
