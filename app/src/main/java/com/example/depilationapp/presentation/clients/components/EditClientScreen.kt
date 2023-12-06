@@ -10,6 +10,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -42,8 +44,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.Client
@@ -233,8 +238,13 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                 }
 
                 // Display list of zones to depilate
-                Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                    zonesDepilated.forEach { zoneDepilate ->
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f)
+                        .padding(8.dp)
+                ) {
+                    items(zonesDepilated) { zoneDepilate ->
                         Text(
                             text = "${zoneDepilate.zone}, intensidad: ${zoneDepilate.intense}",
                             Modifier.padding(bottom = 4.dp)
@@ -245,35 +255,34 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
 
                 Button(
                     onClick = { showDialog = true },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF8AB68B)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp),
+                        .padding(bottom = 8.dp)
+                        .height(35.dp)
+                        .clip(RoundedCornerShape(50.dp))  // Ajusta el valor según el grado de redondeo que desees
                 ) {
-                    Text("Añadir zona de depilación")
+                    Text(
+                        text = "Añadir zona de depilación",
+                        color = Color.White,
+                        style = MaterialTheme.typography.button
+                    )
                 }
 
                 Button(
                     onClick = { showUpdateIntensitiesScreen = true },
-                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Yellow),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF8AB68B)),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)// Color del tema primario
-                        .height(50.dp) // Altura personalizada
-                        .clip(RoundedCornerShape(8.dp)) // Bordes redondeados
+                        .height(35.dp)
+                        .clip(RoundedCornerShape(25.dp))
                 ) {
-                    Text("Actualizar Intensidades")
+                    Text(text = "Actualizar Intensidades",
+                        color = Color.White,
+                        style = MaterialTheme.typography.button)
                 }
 
-
-                // Agrega un nuevo Composable para la pantalla de actualizar intensidades
-                /**
-                if (showUpdateIntensitiesScreen) {
-                    UpdateIntensitiesScreen(
-                        onDismiss = { showUpdateIntensitiesScreen = false },
-                        // Pasa los parámetros necesarios aquí
-                    )
-                }
-                **/
 
                 if (showDialog) {
                     Dialog(onDismissRequest = { showDialog = false }) {
@@ -369,14 +378,21 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                             navController.navigate("clients")
                         }
                     },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF409944)),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(top = 16.dp)
-                        //.background(MaterialTheme.colorScheme.secondary) // Color del tema secundario
-                        .height(60.dp) // Altura personalizada
-                        .clip(RoundedCornerShape(12.dp))
+                        .height(45.dp)
+                        .clip(RoundedCornerShape(30.dp)) // Ajusta el valor según el grado de redondeo que desees
                 ) {
-                    Text("Guardar cambios")
+                    Text(
+                        text = "Guardar cambios",
+                        color = Color.White, // Ajusta el color del texto según el fondo del botón para garantizar contraste
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold, // Estilo de texto en negrita
+                            fontSize = 18.sp // Tamaño de texto personalizado
+                        )
+                    )
                 }
             }
 
