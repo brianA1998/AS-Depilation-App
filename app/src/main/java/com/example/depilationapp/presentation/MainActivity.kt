@@ -21,7 +21,7 @@ import com.example.depilationapp.presentation.clients.components.AddClientScreen
 import com.example.depilationapp.presentation.clients.components.ClientsScreen
 import com.example.depilationapp.presentation.clients.components.DetailScreen
 import com.example.depilationapp.presentation.clients.components.EditClientScreen
-import com.example.depilationapp.presentation.clients.components.HistoricZoneScreen
+import com.example.depilationapp.presentation.zones.HistoricZoneScreen
 import com.example.depilationapp.presentation.navigation.Screen
 import com.example.depilationapp.presentation.zones.ZonesViewModel
 import dagger.hilt.android.AndroidEntryPoint

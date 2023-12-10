@@ -260,7 +260,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                         .fillMaxWidth()
                         .padding(bottom = 8.dp)
                         .height(35.dp)
-                        .clip(RoundedCornerShape(50.dp))  // Ajusta el valor según el grado de redondeo que desees
+                        .clip(RoundedCornerShape(50.dp))
                 ) {
                     Text(
                         text = "Añadir zona de depilación",
@@ -274,7 +274,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF8AB68B)),
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(bottom = 8.dp)// Color del tema primario
+                        .padding(bottom = 8.dp)
                         .height(35.dp)
                         .clip(RoundedCornerShape(25.dp))
                 ) {
@@ -383,14 +383,14 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                         .height(45.dp)
-                        .clip(RoundedCornerShape(30.dp)) // Ajusta el valor según el grado de redondeo que desees
+                        .clip(RoundedCornerShape(30.dp))
                 ) {
                     Text(
                         text = "Guardar cambios",
-                        color = Color.White, // Ajusta el color del texto según el fondo del botón para garantizar contraste
+                        color = Color.White,
                         style = TextStyle(
-                            fontWeight = FontWeight.Bold, // Estilo de texto en negrita
-                            fontSize = 18.sp // Tamaño de texto personalizado
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
                         )
                     )
                 }
