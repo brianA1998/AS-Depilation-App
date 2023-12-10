@@ -55,8 +55,11 @@ import com.example.depilationapp.data.model.Client
 import com.example.depilationapp.data.model.Localidad
 import com.example.depilationapp.data.model.ZoneDepilate
 import com.example.depilationapp.domain.use_case.UseCases
+import com.example.depilationapp.presentation.navigation.Screen
 import com.example.depilationapp.presentation.zones.ZonesViewModel
 import kotlinx.coroutines.launch
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import java.util.UUID
 
 
@@ -270,7 +273,14 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                 }
 
                 Button(
-                    onClick = { showUpdateIntensitiesScreen = true },
+                    onClick = {
+                        showUpdateIntensitiesScreen = true
+                        val zonesDepilatedSerializable = zonesDepilated.toList()
+                        val zonesString = Json.encodeToString(zonesDepilatedSerializable)
+                        val route = Screen.EditIntensityZoneScreen.createRoute(client.id, zonesString)
+                        navController.navigate(route)
+
+                    },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF8AB68B)),
                     modifier = Modifier
                         .fillMaxWidth()

@@ -17,5 +17,11 @@ sealed class Screen(val route: String) {
     object EditClientScreen : Screen("edit/{client}") {
         fun createRoute(jsonClient: String) = "edit/${Uri.encode(jsonClient)}"
     }
+
+    object EditIntensityZoneScreen : Screen("edit_intensity/{client}/{zones}") {
+        fun createRoute(jsonClient: String, zones: String) =
+            "edit_intensity/${Uri.encode(jsonClient)}/${Uri.encode(zones)}"
+    }
+
 }
 
