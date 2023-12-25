@@ -92,9 +92,15 @@ fun MyApp(useCases: UseCases) {
                 HistoricZoneScreen(navController = navController,viewModel = zonesViewModel, clientId = clientId)
             }
 
-            composable(Screen.IntensityZoneScreen.route) {
-                IntensityZoneScreen()
+            composable(Screen.IntensityZoneScreen.route, arguments = listOf(
+                navArgument("clientId") { type = NavType.StringType },
+                navArgument("zones") { type = NavType.StringType }
+            )) { backStackEntry ->
+                val clientId = backStackEntry.arguments?.getString("clientId") ?: ""
+                val zonesString = backStackEntry.arguments?.getString("zones") ?: ""
+                IntensityZoneScreen(navController = navController, clientId = clientId, zonesString = zonesString,viewModel = zonesViewModel)
             }
+
 
 
         }

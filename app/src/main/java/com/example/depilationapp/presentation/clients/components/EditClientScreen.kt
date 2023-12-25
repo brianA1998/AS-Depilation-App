@@ -274,7 +274,9 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
 
                 Button(
                     onClick = {
-                        navController.navigate(Screen.IntensityZoneScreen.route)
+                        navController.navigate(
+                            Screen.IntensityZoneScreen.createRoute(client.id, zonesDepilated)
+                        )
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF8AB68B)),
                     modifier = Modifier
