@@ -2,6 +2,9 @@ package com.example.depilationapp.presentation.navigation
 
 import android.net.Uri
 import com.example.depilationapp.data.model.Client
+import com.example.depilationapp.data.model.ZoneDepilate
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 sealed class Screen(val route: String) {
     object ClientsScreen : Screen("clients")
@@ -18,10 +21,6 @@ sealed class Screen(val route: String) {
         fun createRoute(jsonClient: String) = "edit/${Uri.encode(jsonClient)}"
     }
 
-    object EditIntensityZoneScreen : Screen("edit_intensity/{client}/{zones}") {
-        fun createRoute(jsonClient: String, zones: String) =
-            "edit_intensity/${Uri.encode(jsonClient)}/${Uri.encode(zones)}"
-    }
-
+    object IntensityZoneScreen : Screen("intensity_zone")
 }
 

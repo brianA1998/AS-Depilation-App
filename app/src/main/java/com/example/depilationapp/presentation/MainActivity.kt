@@ -23,6 +23,7 @@ import com.example.depilationapp.presentation.clients.components.DetailScreen
 import com.example.depilationapp.presentation.clients.components.EditClientScreen
 import com.example.depilationapp.presentation.zones.HistoricZoneScreen
 import com.example.depilationapp.presentation.navigation.Screen
+import com.example.depilationapp.presentation.zones.IntensityZoneScreen
 import com.example.depilationapp.presentation.zones.ZonesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import darkThemeColors
@@ -90,6 +91,11 @@ fun MyApp(useCases: UseCases) {
                 val clientId = backStackEntry.arguments?.getString("clientId") ?: ""
                 HistoricZoneScreen(navController = navController,viewModel = zonesViewModel, clientId = clientId)
             }
+
+            composable(Screen.IntensityZoneScreen.route) {
+                IntensityZoneScreen()
+            }
+
 
         }
 

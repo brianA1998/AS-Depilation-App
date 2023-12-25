@@ -274,12 +274,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
 
                 Button(
                     onClick = {
-                        showUpdateIntensitiesScreen = true
-                        val zonesDepilatedSerializable = zonesDepilated.toList()
-                        val zonesString = Json.encodeToString(zonesDepilatedSerializable)
-                        val route = Screen.EditIntensityZoneScreen.createRoute(client.id, zonesString)
-                        navController.navigate(route)
-
+                        navController.navigate(Screen.IntensityZoneScreen.route)
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF8AB68B)),
                     modifier = Modifier
@@ -292,6 +287,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                         color = Color.White,
                         style = MaterialTheme.typography.button)
                 }
+
 
 
                 if (showDialog) {
