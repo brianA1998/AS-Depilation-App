@@ -76,5 +76,19 @@ class ZonesViewModel @Inject constructor(
         }
     }
 
-
+    fun updateIntensity(zoneId: String, intensity: Int) {
+        // Aquí realizarías la lógica para actualizar la intensidad de la zona en tu repositorio o fuente de datos
+        // Puedes llamar a los casos de uso necesarios para actualizar la intensidad de la zona en la base de datos o en otro lugar
+        viewModelScope.launch {
+            try {
+                // Supongamos que tienes un caso de uso llamado updateZoneIntensity que recibe el ID de la zona y la nueva intensidad
+                useCases.updateZoneIntensity(zoneId, intensity)
+                // Si la actualización tiene éxito, no necesitas manejar nada aquí, ya que el estado se actualiza automáticamente
+            } catch (e: Exception) {
+                // Si ocurre un error, puedes manejarlo lanzando una excepción
+                // Aquí podrías mostrar un mensaje de error o realizar cualquier otra acción necesaria
+                Log.e("ZonesViewModel", "Failed to update intensity: $e")
+            }
+        }
+    }
 }

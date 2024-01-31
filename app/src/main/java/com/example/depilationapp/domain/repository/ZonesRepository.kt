@@ -13,4 +13,6 @@ interface ZonesRepository {
     fun getZonesFromFirestore(): Flow<Response<List<ZoneDepilate>>>
     fun getZonesFromFirestoreByClient(clientId: String):  Flow<ZonesResponse>
     suspend fun saveZone(zone: ZoneDepilate)
+
+    suspend fun updateZoneIntensity(zoneId: String, intensity: Int)
 }

@@ -52,6 +52,7 @@ object AppModule {
             getClients = GetClients(clientsRepo),
             saveClient = SaveClient(clientsRepo),
             getZones = GetZones(zonesRepo),
-            saveZone = SaveZone(zonesRepo)
+            saveZone = SaveZone(zonesRepo),
+            updateZoneIntensity = UpdateZoneIntensity(zonesRepo)
         )
 }
