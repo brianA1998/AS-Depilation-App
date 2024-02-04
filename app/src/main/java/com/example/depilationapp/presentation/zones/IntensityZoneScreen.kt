@@ -1,14 +1,13 @@
 package com.example.depilationapp.presentation.zones
 
 import android.annotation.SuppressLint
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -40,6 +39,8 @@ fun IntensityZoneScreen(navController: NavHostController, clientId: String, zone
     }
     val groupedZones = viewModel.groupedZones.value
 
+    var showSaveButton by remember { mutableStateOf(false) }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -69,6 +70,15 @@ fun IntensityZoneScreen(navController: NavHostController, clientId: String, zone
                         }
                     }
                 }
+
+
+                    Button(
+                        onClick = { viewModel.saveChanges(clientId) },
+                        modifier = Modifier.align(Alignment.End)
+                    ) {
+                        Text("Guardar cambios")
+                    }
+
             }
         }
     )
@@ -101,7 +111,7 @@ fun ZoneItem(zone: ZoneDepilate, viewModel: ZonesViewModel) {
             IconButton(
                 onClick = {
                     intensity++
-                    viewModel.updateIntensity(zone.id, intensity)
+                    zone.intense = intensity
                 }
             ) {
                 Icon(Icons.Default.Add, contentDescription = "Aumentar Intensidad")
@@ -111,7 +121,7 @@ fun ZoneItem(zone: ZoneDepilate, viewModel: ZonesViewModel) {
                 onClick = {
                     if (intensity > 0) {
                         intensity--
-                        viewModel.updateIntensity(zone.id, intensity)
+                        zone.intense = intensity
                     }
                 }
             ) {

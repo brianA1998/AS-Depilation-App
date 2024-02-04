@@ -60,16 +60,13 @@ class ZonesRepositoryImpl @Inject constructor(
 
     override suspend fun updateZoneIntensity(zoneId: String, intensity: Int) {
         try {
-            Log.d("ZonesRepository", "Zones: $zoneId");
-            Log.d("ZonesRepository", "intensity: $intensity");
+            Log.d("ZonesRepositoryImpl", "Zones: $zoneId")
+            Log.d("ZonesRepositoryImpl", "intensity: $intensity")
             val zoneDocumentRef = zonesRef.document(zoneId)
             val zoneSnapshot = zoneDocumentRef.get().await()
             if (zoneSnapshot.exists()) {
-                val updatedZone = zoneSnapshot.toObject(ZoneDepilate::class.java)
-                updatedZone?.intense = intensity // Actualiza la intensidad
-                Log.d("ZonesRepository", "updatedZone: $updatedZone")
-                zoneDocumentRef.set(updatedZone!!).await() // Guarda la zona actualizada en Firestore
-                Log.d("ZonesRepository", "Zone updated successfully")
+                zoneDocumentRef.update("intense", intensity).await()
+                Log.d("ZonesRepositoryImpl", "Zone intensity updated successfully")
             } else {
                 throw IllegalArgumentException("La zona con el ID $zoneId no existe")
             }
@@ -78,5 +75,6 @@ class ZonesRepositoryImpl @Inject constructor(
             throw Exception("Failed to update zone intensity", e)
         }
     }
+
 
 }
