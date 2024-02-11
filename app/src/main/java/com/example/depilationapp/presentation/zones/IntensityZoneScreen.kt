@@ -6,8 +6,11 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
@@ -30,8 +33,12 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.depilationapp.data.model.ZoneDepilate
 
@@ -95,9 +102,20 @@ fun IntensityZoneScreen(navController: NavHostController, clientId: String, zone
                         viewModel.saveChanges(clientId)
                         showSaveButton = true
                     },
-                    modifier = Modifier.align(Alignment.End)
+                    modifier = Modifier.align(Alignment.End).padding(top = 16.dp)
+                        .height(45.dp)
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(30.dp)),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color(0xFF8AB68B)),
                 ) {
-                    Text("Guardar cambios")
+                    Text(
+                        text = "Guardar cambios",
+                        color = Color.White, // Cambiar el color del texto
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp
+                        )
+                    )
                 }
             }
         }

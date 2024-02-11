@@ -93,9 +93,6 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
     }
     val groupedZones = viewModel.groupedZones.value
 
-    groupedZones.forEach { zones ->
-        Log.w("GROUPEDZONES VALUES:",zones.value.toString())
-    }
 
     Scaffold(
         topBar = {
@@ -114,6 +111,7 @@ fun EditClientScreen(navController: NavHostController, useCases: UseCases, clien
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(16.dp)
+                    .verticalScroll(rememberScrollState())
             ) {
 
                 Box(Modifier.fillMaxWidth()) {
