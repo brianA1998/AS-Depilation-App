@@ -43,6 +43,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp(useCases)
+            Log.i("MVVM","Estoy en MainActivity")
         }
     }
 }
@@ -60,6 +61,7 @@ fun MyApp(useCases: UseCases) {
 
 
         NavHost(navController, startDestination = Screen.ClientsScreen.route) {
+            Log.i("MVVM","Estoy en el navhost de MainActivity")
             composable(Screen.ClientsScreen.route) {
                 ClientsScreen(navController = navController, clientsViewModel)
             }

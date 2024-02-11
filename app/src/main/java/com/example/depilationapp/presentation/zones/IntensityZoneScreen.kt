@@ -12,6 +12,10 @@ import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
+import androidx.compose.material.Snackbar
+import androidx.compose.material.SnackbarDuration
+import androidx.compose.material.SnackbarHost
+import androidx.compose.material.SnackbarHostState
 import androidx.compose.material.Text
 import androidx.compose.material.TopAppBar
 import androidx.compose.material.icons.Icons
@@ -38,10 +42,25 @@ fun IntensityZoneScreen(navController: NavHostController, clientId: String, zone
         viewModel.getGroupedZones(clientId)
     }
     val groupedZones = viewModel.groupedZones.value
-
     var showSaveButton by remember { mutableStateOf(false) }
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(showSaveButton) {
+        if (showSaveButton) {
+            viewModel.saveChanges(clientId)
+            snackbarHostState.showSnackbar(
+                message = "Se guardó correctamente la intensidad",
+                actionLabel = "",
+                duration = SnackbarDuration.Short
+            )
+            showSaveButton = false // Reset showSaveButton after displaying Snackbar
+        }
+    }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
         topBar = {
             TopAppBar(
                 title = { Text(text = "Intensidades de Zonas") },
@@ -71,18 +90,30 @@ fun IntensityZoneScreen(navController: NavHostController, clientId: String, zone
                     }
                 }
 
-
-                    Button(
-                        onClick = { viewModel.saveChanges(clientId) },
-                        modifier = Modifier.align(Alignment.End)
-                    ) {
-                        Text("Guardar cambios")
-                    }
-
+                Button(
+                    onClick = {
+                        viewModel.saveChanges(clientId)
+                        showSaveButton = true
+                    },
+                    modifier = Modifier.align(Alignment.End)
+                ) {
+                    Text("Guardar cambios")
+                }
             }
         }
     )
 }
+
+
+@Composable
+fun SuccessSnackbar(message: String) {
+    Snackbar(
+        modifier = Modifier.padding(16.dp),
+        content = { Text(text = message) },
+    )
+}
+
+
 
 @Composable
 fun ZoneItem(zone: ZoneDepilate, viewModel: ZonesViewModel) {

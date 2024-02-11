@@ -6,4 +6,5 @@ class GetClients(
     private val repo: ClientsRepository
 ) {
     operator fun invoke() = repo.getClientsFromFirestore()
+
 }

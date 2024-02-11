@@ -1,5 +1,6 @@
 package com.example.depilationapp.presentation.clients.components
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +22,8 @@ import kotlinx.serialization.json.Json
 
 @Composable
 fun ClientsContent(clients: List<Client>, navController: NavHostController) {
+
+    Log.i("MVVM","Estoy en ClientsContent")
     LazyColumn(
         modifier = Modifier.fillMaxHeight(),
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),

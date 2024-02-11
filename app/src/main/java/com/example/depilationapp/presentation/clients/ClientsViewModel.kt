@@ -1,5 +1,6 @@
 package com.example.depilationapp.presentation.clients
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -26,6 +27,7 @@ class ClientsViewModel @Inject constructor(
     }
 
     private fun getClients() = viewModelScope.launch {
+        Log.i("MVVM","Estoy en getClients de ClientsViewModel")
         useCases.getClients().collect { response ->
             clientsResponse = response
         }

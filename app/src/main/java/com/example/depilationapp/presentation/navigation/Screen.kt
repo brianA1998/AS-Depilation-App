@@ -7,6 +7,7 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 sealed class Screen(val route: String) {
+
     object ClientsScreen : Screen("clients")
     object DetailScreen : Screen("detail/{client}") {
         fun createRoute(jsonClient: String) = "detail/${Uri.encode(jsonClient)}"
@@ -27,5 +28,8 @@ sealed class Screen(val route: String) {
             return "intensity_zone/${Uri.encode(clientId)}/${Uri.encode(zonesString)}"
         }
     }
+
 }
+
+
 

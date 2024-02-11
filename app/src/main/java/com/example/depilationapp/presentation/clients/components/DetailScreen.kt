@@ -26,6 +26,8 @@ fun DetailScreen(client: Client, viewModel: ZonesViewModel, navController : NavC
     viewModel.getZones(client.id)
     val zonesResponse = viewModel.zonesResponse.value
 
+    Log.i("MVVM","Estoy en DetailScreen ")
+
     Scaffold(
         topBar = {
             TopAppBar(
