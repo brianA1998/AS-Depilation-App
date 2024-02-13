@@ -5,4 +5,5 @@ data class UseCases(
     val saveClient: SaveClient,
     val getZones: GetZones,
     val saveZone: SaveZone,
+    val updateZoneIntensity: UpdateZoneIntensity
 )

@@ -76,5 +76,23 @@ class ZonesViewModel @Inject constructor(
         }
     }
 
+    fun saveChanges(clientId: String) {
+        Log.w("ZonesViewModel","entre saveChanges")
+        viewModelScope.launch {
+            try {
+                groupedZones.value.forEach { (_, months) ->
+                    months.forEach { (_, zones) ->
+                        zones.forEach { zone ->
+                            useCases.updateZoneIntensity(zone.id, zone.intense)
+                        }
+                    }
+                }
+                getGroupedZones(clientId)
+            } catch (e: Exception) {
+                Log.e("ZonesViewModel", "Failed to save changes: $e")
+            }
+        }
+    }
+
 
 }

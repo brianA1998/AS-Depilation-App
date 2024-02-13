@@ -27,6 +27,7 @@ import com.example.depilationapp.presentation.navigation.Screen
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ClientsScreen(navController: NavHostController, viewModel: ClientsViewModel = hiltViewModel()) {
+    Log.i("MVVM","Estoy en ClientsScreen")
     val clientsResponse = viewModel.clientsResponse
 
     Scaffold(

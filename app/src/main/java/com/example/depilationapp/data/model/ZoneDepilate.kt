@@ -9,7 +9,7 @@ data class ZoneDepilate(
     var id: String = "",
     var clientId: String = "",
     val zone: String = "",
-    val intense: Int = 0,
+    var intense: Int = 0,
     val date: Long
 )
 

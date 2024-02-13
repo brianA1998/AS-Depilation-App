@@ -21,8 +21,9 @@ import com.example.depilationapp.presentation.clients.components.AddClientScreen
 import com.example.depilationapp.presentation.clients.components.ClientsScreen
 import com.example.depilationapp.presentation.clients.components.DetailScreen
 import com.example.depilationapp.presentation.clients.components.EditClientScreen
-import com.example.depilationapp.presentation.clients.components.HistoricZoneScreen
+import com.example.depilationapp.presentation.zones.HistoricZoneScreen
 import com.example.depilationapp.presentation.navigation.Screen
+import com.example.depilationapp.presentation.zones.IntensityZoneScreen
 import com.example.depilationapp.presentation.zones.ZonesViewModel
 import dagger.hilt.android.AndroidEntryPoint
 import darkThemeColors
@@ -42,6 +43,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyApp(useCases)
+            Log.i("MVVM","Estoy en MainActivity")
         }
     }
 }
@@ -59,6 +61,7 @@ fun MyApp(useCases: UseCases) {
 
 
         NavHost(navController, startDestination = Screen.ClientsScreen.route) {
+            Log.i("MVVM","Estoy en el navhost de MainActivity")
             composable(Screen.ClientsScreen.route) {
                 ClientsScreen(navController = navController, clientsViewModel)
             }
@@ -90,6 +93,17 @@ fun MyApp(useCases: UseCases) {
                 val clientId = backStackEntry.arguments?.getString("clientId") ?: ""
                 HistoricZoneScreen(navController = navController,viewModel = zonesViewModel, clientId = clientId)
             }
+
+            composable(Screen.IntensityZoneScreen.route, arguments = listOf(
+                navArgument("clientId") { type = NavType.StringType },
+                navArgument("zones") { type = NavType.StringType }
+            )) { backStackEntry ->
+                val clientId = backStackEntry.arguments?.getString("clientId") ?: ""
+                val zonesString = backStackEntry.arguments?.getString("zones") ?: ""
+                IntensityZoneScreen(navController = navController, clientId = clientId, zonesString = zonesString,viewModel = zonesViewModel)
+            }
+
+
 
         }
 

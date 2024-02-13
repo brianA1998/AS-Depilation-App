@@ -58,4 +58,23 @@ class ZonesRepositoryImpl @Inject constructor(
         zoneDocumentRef.set(zone.toMap()) // Guarda la zona en Firestore
     }
 
+    override suspend fun updateZoneIntensity(zoneId: String, intensity: Int) {
+        try {
+            Log.d("ZonesRepositoryImpl", "Zones: $zoneId")
+            Log.d("ZonesRepositoryImpl", "intensity: $intensity")
+            val zoneDocumentRef = zonesRef.document(zoneId)
+            val zoneSnapshot = zoneDocumentRef.get().await()
+            if (zoneSnapshot.exists()) {
+                zoneDocumentRef.update("intense", intensity).await()
+                Log.d("ZonesRepositoryImpl", "Zone intensity updated successfully")
+            } else {
+                throw IllegalArgumentException("La zona con el ID $zoneId no existe")
+            }
+        } catch (e: Exception) {
+            // Si ocurre un error, puedes manejarlo lanzando una excepción
+            throw Exception("Failed to update zone intensity", e)
+        }
+    }
+
+
 }

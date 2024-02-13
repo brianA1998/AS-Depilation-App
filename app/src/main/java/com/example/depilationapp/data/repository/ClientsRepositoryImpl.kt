@@ -21,6 +21,7 @@ class ClientsRepositoryImpl @Inject constructor(
 ) : ClientsRepository {
 
     override fun getClientsFromFirestore() = callbackFlow {
+        Log.i("MVVM","Estoy en getClientsFromFirestore de ClientsRepositoryImpl")
         val subscription = clientsRef.addSnapshotListener { snapshot, exception ->
             if (exception != null) {
                 trySend(Failure(exception))

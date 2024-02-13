@@ -12,6 +12,7 @@ typealias ClientsResponse = Response<Clients>
 
 
 interface ClientsRepository {
+
     fun getClientsFromFirestore(): Flow<Response<out MutableList<Client>>>
     suspend fun saveClient(client: Client, zones: List<ZoneDepilate>)
 }

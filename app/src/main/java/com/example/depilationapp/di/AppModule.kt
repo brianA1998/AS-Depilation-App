@@ -27,6 +27,8 @@ annotation class ZonesCollection
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+
     @ClientsCollection
     @Provides
     fun provideClientsRef() = Firebase.firestore.collection(Constants.CLIENTS)
@@ -52,6 +54,7 @@ object AppModule {
             getClients = GetClients(clientsRepo),
             saveClient = SaveClient(clientsRepo),
             getZones = GetZones(zonesRepo),
-            saveZone = SaveZone(zonesRepo)
+            saveZone = SaveZone(zonesRepo),
+            updateZoneIntensity = UpdateZoneIntensity(zonesRepo)
         )
 }
