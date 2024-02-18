@@ -1,22 +1,25 @@
 package com.example.depilationapp.presentation.clients.components
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -30,141 +33,145 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter", "StateFlowValueCalledInComposition")
+@SuppressLint("StateFlowValueCalledInComposition", "UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun DetailScreen(client: Client, viewModel: ZonesViewModel, navController : NavController) {
+fun DetailScreen(client: Client, viewModel: ZonesViewModel, navController: NavController) {
     viewModel.getZones(client.id)
     val zonesResponse = viewModel.zonesResponse.value
-    Scaffold(
-        content = {
-            Box(modifier = Modifier.fillMaxSize()){
-                Column {
 
-                    Spacer(modifier = Modifier.padding(10.dp))
-                    DetailItem(title = "Nombre", value = client.name,modifier = Modifier.fillMaxWidth())
-                    DetailItem(title = "Apellido", value = client.surname,modifier = Modifier.fillMaxWidth())
-                    DetailItem(title = "Documento", value = client.document?.toString() ?: "",modifier = Modifier.fillMaxWidth())
-                    DetailItem(title = "Localidad", value = client.localidad?.province ?: "",modifier = Modifier.fillMaxWidth())
-                    DetailItem(
-                        title = "Teléfono personal",
-                        value = client.numberPhonePersonal?.toString() ?: "",
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    DetailItem(
-                        title = "Teléfono adicional",
-                        value = client.numberPhoneOther?.toString() ?: "",
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                    DetailItem(title = "Estado", value = if (client.state) "Activo" else "Inactivo",modifier = Modifier.fillMaxWidth())
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 4.dp),
-                        horizontalArrangement = Arrangement.Start
-                    ) {
-                        Text(
-                            text = "Zonas",
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 18.sp
-                        )
+    Scaffold {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 16.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Column(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Spacer(modifier = Modifier.height(16.dp))
+
+                // Información personal
+                SectionTitle(title = "Información personal")
+                DetailItem(title = "Nombre", value = client.name)
+                DetailItem(title = "Apellido", value = client.surname)
+                DetailItem(title = "Documento", value = client.document?.toString() ?: "")
+                DetailItem(title = "Localidad", value = client.localidad?.province ?: "")
+                DetailItem(title = "Teléfono personal", value = client.numberPhonePersonal?.toString() ?: "")
+                DetailItem(title = "Teléfono adicional", value = client.numberPhoneOther?.toString() ?: "")
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // Zonas de tratamiento
+                SectionTitle(title = "Zonas de tratamiento")
+                when (zonesResponse) {
+                    is Response.Loading -> CircularProgressIndicator()
+                    is Response.Failure -> {
+                        val exception = (zonesResponse as Response.Failure).e
+                        Text("Error: ${exception?.message}")
                     }
-                    when (zonesResponse) {
-                        is Response.Loading -> Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                        is Response.Failure -> {
-                            // Muestra el error
-                            val exception = (zonesResponse as Response.Failure).e
-                            Text("Error: ${exception?.message}")
-                        }
-                        is Response.Success<*> -> {
-                            // Muestra las zonas recuperadas
-                            val zones = (zonesResponse as Response.Success<List<ZoneDepilate>>).data
-                            val zoneNamesAndIntense = zones.flatMap { zone ->
-                                listOf(Pair(zone.zone, zone.intense))
-                            }.distinct()
-
-                            zoneNamesAndIntense.forEach { (zone, intense) ->
-
-                                DetailItemZone(zone = zone, intensity = intense)
-                            }
+                    is Response.Success<*> -> {
+                        val zones = (zonesResponse as Response.Success<List<ZoneDepilate>>).data
+                        zones.forEach { zone ->
+                            DetailItemZone(zone = zone.zone, intensity = zone.intense)
                         }
                     }
+                }
 
-                    DetailItem(title = "Observaciones", value = client.observation,modifier = Modifier.fillMaxWidth())
+                Spacer(modifier = Modifier.height(24.dp))
 
-                    Button(
-                        onClick = {
-                            val jsonClient = Json.encodeToString(client) // Serializar el cliente a JSON
-                            navController.navigate(Screen.EditClientScreen.createRoute(jsonClient))
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text("Editar datos del cliente")
-                    }
+                // Observaciones
+                SectionTitle(title = "Observaciones")
+                Text(
+                    text = client.observation,
+                    modifier = Modifier.padding(end = 16.dp)
+                )
 
-                    Button(
-                        onClick = {
-                            val route = Screen.HistoricZoneScreen.createRoute(client.id)
-                            navController.navigate(route)
-                        },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    ) {
-                        Text(text = "Ver histórico de zonas")
-                    }
+                Spacer(modifier = Modifier.height(24.dp))
+
+                Button(
+                    onClick = {
+                        val jsonClient = Json.encodeToString(client)
+                        navController.navigate(Screen.EditClientScreen.createRoute(jsonClient))
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue, contentColor = Color.White),
+                    shape = RoundedCornerShape(12.dp)
+
+                ) {
+                    Text("Editar datos del cliente")
+                }
+                Spacer(modifier = Modifier.height(2.dp))
+                Button(
+                    onClick = {
+                        val route = Screen.HistoricZoneScreen.createRoute(client.id)
+                        navController.navigate(route)
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue, contentColor = Color.White),
+                    shape = RoundedCornerShape(12.dp)
+
+                ) {
+                    Text("Ver histórico de zonas")
                 }
             }
         }
-    )
+    }
 }
 
 @Composable
-fun DetailItem(title: String, value: String, modifier: Modifier = Modifier) {
-    Row(
+fun DetailItem(title: String, value: String) {
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        horizontalAlignment = Alignment.Start
     ) {
         Text(
-            text = title,
+            text = "$title:",
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier.width(180.dp)
+            fontSize = 16.sp
         )
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             text = value,
-            fontSize = 18.sp
+            fontSize = 16.sp
         )
     }
 }
 
 @Composable
 fun DetailItemZone(zone: String, intensity: Int) {
-    Row(
+    Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 4.dp),
-        verticalAlignment = Alignment.CenterVertically
+        horizontalAlignment = Alignment.Start
     ) {
         Text(
             text = zone,
+            fontSize = 16.sp,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
-            modifier = Modifier.weight(1f)
         )
-        Spacer(modifier = Modifier.padding(8.dp))
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
-            text = intensity.toString(),
-            fontSize = 18.sp,
-            modifier = Modifier.weight(1f)
+            text = "Intensidad: ${intensity.toString()}",
+            fontSize = 14.sp,
         )
     }
+}
+
+@Composable
+fun SectionTitle(title: String) {
+    Text(
+        text = title,
+        fontWeight = FontWeight.Bold,
+        fontSize = 20.sp,
+        modifier = Modifier.padding(vertical = 8.dp)
+    )
 }
 
